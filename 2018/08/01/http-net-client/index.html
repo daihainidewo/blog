@@ -79,18 +79,18 @@
 
 
 
-<meta name="description" content="大概记录一下golang里面的net/http包内的文件，及其相关内容 clientClient structClient 是一个HTTP clientClient Transport通常具有内部状态（缓存TCP连接），所以Client应该被重用而不是工具需求创建Client 是协程安全的Client 是比RoundTripper更高级，并处理HTTP的细节（cookie和redirect）重定向">
+<meta name="description" content="大概记录一下golang里面的net/http包内的文件，及其相关内容">
 <meta name="keywords" content="net,http">
 <meta property="og:type" content="article">
 <meta property="og:title" content="golang package net&#x2F;http&#x2F;client">
 <meta property="og:url" content="https://daihainidewo.github.io/2018/08/01/http-net-client/index.html">
 <meta property="og:site_name" content="dhainidewo blog">
-<meta property="og:description" content="大概记录一下golang里面的net/http包内的文件，及其相关内容 clientClient structClient 是一个HTTP clientClient Transport通常具有内部状态（缓存TCP连接），所以Client应该被重用而不是工具需求创建Client 是协程安全的Client 是比RoundTripper更高级，并处理HTTP的细节（cookie和redirect）重定向">
+<meta property="og:description" content="大概记录一下golang里面的net/http包内的文件，及其相关内容">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2018-08-01T10:09:08.769Z">
+<meta property="og:updated_time" content="2018-08-01T10:13:08.767Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="golang package net&#x2F;http&#x2F;client">
-<meta name="twitter:description" content="大概记录一下golang里面的net/http包内的文件，及其相关内容 clientClient structClient 是一个HTTP clientClient Transport通常具有内部状态（缓存TCP连接），所以Client应该被重用而不是工具需求创建Client 是协程安全的Client 是比RoundTripper更高级，并处理HTTP的细节（cookie和redirect）重定向">
+<meta name="twitter:description" content="大概记录一下golang里面的net/http包内的文件，及其相关内容">
 
 
 
@@ -332,7 +332,7 @@
       
 
       
-        <p>大概记录一下golang里面的net/http包内的文件，及其相关内容</p>
+        <p>大概记录一下golang里面的net/http包内的文件，及其相关内容<br><a id="more"></a></p>
 <h1 id="client"><a href="#client" class="headerlink" title="client"></a>client</h1><h2 id="Client-struct"><a href="#Client-struct" class="headerlink" title="Client struct"></a>Client struct</h2><p>Client 是一个HTTP client<br>Client Transport通常具有内部状态（缓存TCP连接），所以Client应该被重用而不是工具需求创建<br>Client 是协程安全的<br>Client 是比RoundTripper更高级，并处理HTTP的细节（cookie和redirect）<br>重定向后，Client将会转发初始请求的所有headers，除：</p>
 <ul>
 <li>headers具有敏感信息（Authorization，WWW-Authenticate，Cookie）传递给不受信任的目标。在重定向时不是子域匹配的域或初始域的完全匹配域时会被忽略</li>
