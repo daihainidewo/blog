@@ -1,0 +1,802 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="../lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="../lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="../css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="../images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="../images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="../images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="../images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="k8s," />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="Node是什么？Node是Kubernetes中的工作节点，最开始被称为minion。一个Node可以是VM或物理机。每个Node（节点）具有运行pod的一些必要服务，并由Master组件进行管理，Node节点上的服务包括Docker、kubelet和kube-proxy。有关更多详细信息，请参考架构设计文档中的“Kubernetes Node”部分。">
+<meta name="keywords" content="k8s">
+<meta property="og:type" content="article">
+<meta property="og:title" content="k8s-Nodes">
+<meta property="og:url" content="https://daihainidewo.github.io/k8s-Nodes/index.html">
+<meta property="og:site_name" content="dhainidewo blog">
+<meta property="og:description" content="Node是什么？Node是Kubernetes中的工作节点，最开始被称为minion。一个Node可以是VM或物理机。每个Node（节点）具有运行pod的一些必要服务，并由Master组件进行管理，Node节点上的服务包括Docker、kubelet和kube-proxy。有关更多详细信息，请参考架构设计文档中的“Kubernetes Node”部分。">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2018-08-02T07:58:11.548Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="k8s-Nodes">
+<meta name="twitter:description" content="Node是什么？Node是Kubernetes中的工作节点，最开始被称为minion。一个Node可以是VM或物理机。每个Node（节点）具有运行pod的一些必要服务，并由Master组件进行管理，Node节点上的服务包括Docker、kubelet和kube-proxy。有关更多详细信息，请参考架构设计文档中的“Kubernetes Node”部分。">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/blog/',
+    scheme: 'Muse',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://daihainidewo.github.io/k8s-Nodes/"/>
+
+
+
+
+
+  <title>k8s-Nodes | dhainidewo blog</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/blog/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">dhainidewo blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">note study problem</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://daihainidewo.github.io">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="dhainidewo">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="../images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="dhainidewo blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">k8s-Nodes</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-08-02T15:31:05+08:00">
+                2018-08-02
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="../categories/k8s/" itemprop="url" rel="index">
+                    <span itemprop="name">k8s</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h2 id="Node是什么？"><a href="#Node是什么？" class="headerlink" title="Node是什么？"></a>Node是什么？</h2><p>Node是Kubernetes中的工作节点，最开始被称为minion。一个Node可以是VM或物理机。每个Node（节点）具有运行<a href="http://docs.kubernetes.org.cn/312.html" target="_blank" rel="noopener">pod</a>的一些必要服务，并由Master组件进行管理，Node节点上的服务包括Docker、kubelet和kube-proxy。有关更多详细信息，请参考架构设计文档中的<a href="https://git.k8s.io/community/contributors/design-proposals/architecture.md#the-kubernetes-node" target="_blank" rel="noopener">“Kubernetes Node”</a>部分。<br><a id="more"></a></p>
+<h2 id="Node-Status"><a href="#Node-Status" class="headerlink" title="Node Status"></a>Node Status</h2><p>节点的状态信息包含：</p>
+<ul>
+<li>Addresses</li>
+<li><del>Phase</del> (已弃用)</li>
+<li>Condition</li>
+<li>Capacity</li>
+<li>Info</li>
+</ul>
+<p>下面详细描述每个部分。</p>
+<h3 id="Addresses"><a href="#Addresses" class="headerlink" title="Addresses"></a>Addresses</h3><p>这些字段的使用取决于云提供商或裸机配置。</p>
+<ul>
+<li>HostName：可以通过kubelet 中 –hostname-override参数覆盖。</li>
+<li>ExternalIP：可以被集群外部路由到的IP。</li>
+<li>InternalIP：只能在集群内进行路由的节点的IP地址。</li>
+</ul>
+<h3 id="Phase"><a href="#Phase" class="headerlink" title="Phase"></a>Phase</h3><p>不推荐使用，已弃用。</p>
+<h3 id="Condition"><a href="#Condition" class="headerlink" title="Condition"></a>Condition</h3><p>conditions字段描述所有Running节点的状态。</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:center">Node Condition</th>
+<th style="text-align:left">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center">OutOfDisk</td>
+<td style="text-align:left">True：如果节点上没有足够的可用空间来添加新的pod；否则为：False</td>
+</tr>
+<tr>
+<td style="text-align:center">Ready</td>
+<td style="text-align:left">True：如果节点是健康的并准备好接收pod；False：如果节点不健康并且不接受pod；Unknown：如果节点控制器在过去40秒内没有收到node的状态报告。</td>
+</tr>
+<tr>
+<td style="text-align:center">MemoryPressure</td>
+<td style="text-align:left">True：如果节点存储器上内存过低; 否则为：False。</td>
+</tr>
+<tr>
+<td style="text-align:center">DiskPressure</td>
+<td style="text-align:left">True：如果磁盘容量存在压力 - 也就是说磁盘容量低；否则为：False。</td>
+</tr>
+</tbody>
+</table>
+<p>node condition被表示为一个JSON对象。例如，下面的响应描述了一个健康的节点。</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">"conditions": [</span><br><span class="line">  &#123;</span><br><span class="line">    <span class="attr">"kind"</span>: <span class="string">"Ready"</span>,</span><br><span class="line">    <span class="attr">"status"</span>: <span class="string">"True"</span></span><br><span class="line">  &#125;</span><br><span class="line">]</span><br></pre></td></tr></table></figure>
+<p>如果Ready condition的Status是“Unknown” 或 “False”，比“pod-eviction-timeout”的时间长，则传递给“ kube-controller-manager”的参数，该节点上的所有Pod都将被节点控制器删除。默认的eviction timeout时间为5分钟。在某些情况下，当节点无法访问时，apiserver将无法与kubelet通信，删除Pod的需求不会传递到kubelet，直到重新与apiserver建立通信，这种情况下，计划删除的Pod会继续在划分的节点上运行。</p>
+<p>在Kubernetes 1.5之前的版本中，节点控制器将强制从apiserver中删除这些不可达（上述情况）的pod。但是，在1.5及更高版本中，节点控制器在确认它们已经停止在集群中运行之前，不会强制删除Pod。可以看到这些可能在不可达节点上运行的pod处于”Terminating”或 “Unknown”。如果节点永久退出集群，Kubernetes是无法从底层基础架构辨别出来，则集群管理员需要手动删除节点对象，从Kubernetes删除节点对象会导致运行在上面的所有Pod对象从apiserver中删除，最终将会释放names。</p>
+<h3 id="Capacity"><a href="#Capacity" class="headerlink" title="Capacity"></a>Capacity</h3><p>描述节点上可用的资源：CPU、内存和可以调度到节点上的最大pod数。</p>
+<h3 id="Info"><a href="#Info" class="headerlink" title="Info"></a>Info</h3><p>关于节点的一些基础信息，如内核版本、Kubernetes版本（kubelet和kube-proxy版本）、Docker版本（如果有使用）、OS名称等。信息由Kubelet从节点收集。</p>
+<h2 id="Management"><a href="#Management" class="headerlink" title="Management"></a>Management</h2><p>与 <a href="http://docs.kubernetes.org.cn/312.html" target="_blank" rel="noopener">pods</a> 和 services 不同，节点不是由Kubernetes 系统创建，它是由Google Compute Engine等云提供商在外部创建的，或使用物理和虚拟机。这意味着当Kubernetes创建一个节点时，它只是创建一个代表节点的对象，创建后，Kubernetes将检查节点是否有效。例如，如果使用以下内容创建一个节点：</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  <span class="attr">"kind"</span>: <span class="string">"Node"</span>,</span><br><span class="line">  <span class="attr">"apiVersion"</span>: <span class="string">"v1"</span>,</span><br><span class="line">  <span class="attr">"metadata"</span>: &#123;</span><br><span class="line">    <span class="attr">"name"</span>: <span class="string">"10.240.79.157"</span>,</span><br><span class="line">    <span class="attr">"labels"</span>: &#123;</span><br><span class="line">      <span class="attr">"name"</span>: <span class="string">"my-first-k8s-node"</span></span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>Kubernetes将在内部创建一个节点对象，并通过基于metadata.name字段的健康检查来验证节点，如果节点有效，即所有必需的服务会同步运行，则才能在上面运行pod。请注意，Kubernetes将保留无效节点的对象（除非客户端有明确删除它）并且它将继续检查它是否变为有效。</p>
+<p>目前，有三个组件与Kubernetes节点接口进行交互：节点控制器（node controller）、kubelet和kubectl。</p>
+<h3 id="Node-Controller"><a href="#Node-Controller" class="headerlink" title="Node Controller"></a>Node Controller</h3><p>节点控制器（Node Controller）是管理节点的Kubernetes master组件。</p>
+<p>节点控制器在节点的生命周期中具有多个角色。第一个是在注册时将CIDR块分配给节点。</p>
+<p>第二个是使节点控制器的内部列表与云提供商的可用机器列表保持最新。当在云环境中运行时，每当节点不健康时，节点控制器将询问云提供程序是否该节点的VM仍然可用，如果不可用，节点控制器会从其节点列表中删除该节点。</p>
+<p>第三是监测节点的健康状况。当节点变为不可访问时，节点控制器负责将NodeStatus的NodeReady条件更新为ConditionUnknown，随后从节点中卸载所有pod ，如果节点继续无法访问，（默认超时时间为40 –node-monitor-period秒，开始报告ConditionUnknown，之后为5m开始卸载）。节点控制器按每秒来检查每个节点的状态。</p>
+<p>在Kubernetes 1.4中，我们更新了节点控制器的逻辑，以更好地处理大量节点到达主节点的一些问题（例如，主节某些网络问题）。从1.4开始，节点控制器将在决定关于pod卸载的过程中会查看集群中所有节点的状态。</p>
+<p>在大多数情况下，节点控制器将逐出速率限制为 –node-eviction-rate（默认为0.1）/秒，这意味着它不会每10秒从多于1个节点驱逐Pod。</p>
+<p>当给定可用性的区域中的节点变得不健康时，节点逐出行为发生变化，节点控制器同时检查区域中节点的不健康百分比（NodeReady条件为ConditionUnknown或ConditionFalse）。如果不健康节点的比例为 –unhealthy-zone-threshold（默认为0.55），那么驱逐速度就会降低：如果集群很小（即小于或等于–large-cluster-size-threshold节点 - 默认值为50），则停止驱逐，否则， –secondary-node-eviction-rate（默认为0.01）每秒。这些策略在可用性区域内实现的原因是，一个可用性区域可能会从主分区中被分区，而其他可用区域则保持连接。如果集群没有跨多个云提供商可用性区域，那么只有一个可用区域(整个集群)。</p>
+<p>在可用区域之间传播节点的一个主要原因是，当整个区域停止时，工作负载可以转移到健康区域。因此，如果区域中的所有节点都不健康，则节点控制器以正常速率逐出–node-eviction-rate。如所有的区域都是完全不健康的（即群集中没有健康的节点），在这种情况下，节点控制器会假设主连接有一些问题，并停止所有驱逐，直到某些连接恢复。</p>
+<p>从Kubernetes 1.6开始，节点控制器还负责驱逐在节点上运行的NoExecutepod。</p>
+<h3 id="Self-Registration-of-Nodes"><a href="#Self-Registration-of-Nodes" class="headerlink" title="Self-Registration of Nodes"></a>Self-Registration of Nodes</h3><p>当kubelet flag –register-node为true（默认值）时，kubelet将向API服务器注册自身。这是大多数发行版使用的首选模式。</p>
+<p>对于self-registration，kubelet从以下选项开始：</p>
+<ul>
+<li><code>--api-servers</code> - Location of the apiservers.</li>
+<li><code>--kubeconfig</code> - Path to credentials to authenticate itself to the apiserver.</li>
+<li><code>--cloud-provider</code> - How to talk to a cloud provider to read metadata about itself.</li>
+<li><code>--register-node</code> - Automatically register with the API server.</li>
+<li><code>--register-with-taints</code> - Register the node with the given list of taints (comma separated <code>&lt;key&gt;=&lt;value&gt;:&lt;effect&gt;</code>). No-op if <code>register-node</code> is false.</li>
+<li><code>--node-ip</code> IP address of the node.</li>
+<li><code>--node-labels</code> - Labels to add when registering the node in the cluster.</li>
+<li><code>--node-status-update-frequency</code> - Specifies how often kubelet posts node status to master.</li>
+</ul>
+<h4 id="手动管理节点"><a href="#手动管理节点" class="headerlink" title="手动管理节点"></a>手动管理节点</h4><p>集群管理员可以创建和修改节点对象。</p>
+<p>如果管理员希望手动创建节点对象，请设置kubelet flag  –register-node=false。</p>
+<p>管理员可以修改节点资源（不管–register-node设置如何），修改包括在节点上设置的labels 标签，并将其标记为不可调度的。</p>
+<p>节点上的标签可以与pod上的节点选择器一起使用，以控制调度，例如将一个pod限制为只能在节点的子集上运行。</p>
+<p>将节点标记为不可调度将防止新的pod被调度到该节点，但不会影响节点上的任何现有的pod，这在节点重新启动之前是有用的。例如，要标记节点不可调度，请运行以下命令：</p>
+<p>kubectl cordon $NODENAME</p>
+<p><strong>注意</strong>，由daemonSet控制器创建的pod可以绕过Kubernetes调度程序，并且不遵循节点上无法调度的属性。</p>
+<h3 id="Node容量"><a href="#Node容量" class="headerlink" title="Node容量"></a>Node容量</h3><p>节点的容量(cpu数量和内存数量)是节点对象的一部分。通常，节点在创建节点对象时注册并通知其容量。如果是<a href="http://docs.kubernetes.org.cn/304.html#i" target="_blank" rel="noopener">手动管理节点</a>，则需要在添加节点时设置节点容量。</p>
+<p>Kubernetes调度程序可确保节点上的所有pod都有足够的资源。它会检查节点上容器的请求的总和不大于节点容量。</p>
+<p>如果要明确保留非pod过程的资源，可以创建一个占位符pod。使用以下模板：<br><figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">apiVersion:</span> <span class="string">v1</span></span><br><span class="line"><span class="attr">kind:</span> <span class="string">Pod</span></span><br><span class="line"><span class="attr">metadata:</span></span><br><span class="line"><span class="attr">  name:</span> <span class="string">resource-reserver</span></span><br><span class="line"><span class="attr">spec:</span></span><br><span class="line"><span class="attr">  containers:</span></span><br><span class="line"><span class="attr">  - name:</span> <span class="string">sleep-forever</span></span><br><span class="line"><span class="attr">    image:</span> <span class="string">gcr.io/google_containers/pause:0.8.0</span></span><br><span class="line"><span class="attr">    resources:</span></span><br><span class="line"><span class="attr">      requests:</span></span><br><span class="line"><span class="attr">        cpu:</span> <span class="number">100</span><span class="string">m</span></span><br><span class="line"><span class="attr">        memory:</span> <span class="number">100</span><span class="string">Mi</span></span><br></pre></td></tr></table></figure></p>
+<p>将cpu和内存值设置为你想要保留的资源量，将文件放置在manifest目录中(<code>--config=DIR</code> flag of kubelet)。在要预留资源的每个kubelet上执行此操作。</p>
+<h2 id="API-对象"><a href="#API-对象" class="headerlink" title="API 对象"></a>API 对象</h2><p>Node是Kubernetes REST API中的最高级别资源。</p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="../tags/k8s/" rel="tag"># k8s</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="../k8s-Annotations/" rel="next" title="k8s-Annotations">
+                <i class="fa fa-chevron-left"></i> k8s-Annotations
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="../k8s-Master-Node通信/" rel="prev" title="k8s-Master-Node通信">
+                k8s-Master-Node通信 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">dhainidewo</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="../archives/">
+              
+                  <span class="site-state-item-count">23</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="../categories/index.html">
+                  <span class="site-state-item-count">4</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="../tags/index.html">
+                  <span class="site-state-item-count">8</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://github.com/daihainidewo" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-globe"></i>GitHub</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Node是什么？"><span class="nav-number">1.</span> <span class="nav-text">Node是什么？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Node-Status"><span class="nav-number">2.</span> <span class="nav-text">Node Status</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Addresses"><span class="nav-number">2.1.</span> <span class="nav-text">Addresses</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Phase"><span class="nav-number">2.2.</span> <span class="nav-text">Phase</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Condition"><span class="nav-number">2.3.</span> <span class="nav-text">Condition</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Capacity"><span class="nav-number">2.4.</span> <span class="nav-text">Capacity</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Info"><span class="nav-number">2.5.</span> <span class="nav-text">Info</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Management"><span class="nav-number">3.</span> <span class="nav-text">Management</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Node-Controller"><span class="nav-number">3.1.</span> <span class="nav-text">Node Controller</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Self-Registration-of-Nodes"><span class="nav-number">3.2.</span> <span class="nav-text">Self-Registration of Nodes</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#手动管理节点"><span class="nav-number">3.2.1.</span> <span class="nav-text">手动管理节点</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Node容量"><span class="nav-number">3.3.</span> <span class="nav-text">Node容量</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#API-对象"><span class="nav-number">4.</span> <span class="nav-text">API 对象</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">dhainidewo</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Muse</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="../lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="../lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="../lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="../lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="../lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="../lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="../js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="../js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="../js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="../js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="../js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

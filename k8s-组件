@@ -1,0 +1,753 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="k8s," />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="介绍Kubernetes集群所需的各种组件">
+<meta name="keywords" content="k8s">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Kubernetes-组件">
+<meta property="og:url" content="https://daihainidewo.github.io/k8s-组件">
+<meta property="og:site_name" content="dhainidewo blog">
+<meta property="og:description" content="介绍Kubernetes集群所需的各种组件">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2018-08-02T02:59:37.866Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Kubernetes-组件">
+<meta name="twitter:description" content="介绍Kubernetes集群所需的各种组件">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/blog/',
+    scheme: 'Muse',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://daihainidewo.github.io/k8s-组件"/>
+
+
+
+
+
+  <title>Kubernetes-组件 | dhainidewo blog</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/blog/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">dhainidewo blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">note study problem</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://daihainidewo.github.io">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="dhainidewo">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="dhainidewo blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">Kubernetes-组件</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-08-02T10:17:29+08:00">
+                2018-08-02
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="categories/k8s/" itemprop="url" rel="index">
+                    <span itemprop="name">k8s</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>介绍Kubernetes集群所需的各种组件<br><a id="more"></a></p>
+<h1 id="master-组件"><a href="#master-组件" class="headerlink" title="master 组件"></a>master 组件</h1><p>master 组件提供集群的管理控制中心<br>master 组件可以运行在任何节点上</p>
+<h2 id="kube-apiserver"><a href="#kube-apiserver" class="headerlink" title="kube-apiserver"></a>kube-apiserver</h2><p>kube-apiserver 用于暴露k8s API，任何的资源请求/调用操作都是通过它提供的接口进行</p>
+<h2 id="ETCD"><a href="#ETCD" class="headerlink" title="ETCD"></a>ETCD</h2><p>etcd 是k8s提供的默认存储系统，保存所有集群的数据，使用时需要为数据提供备份计划</p>
+<h2 id="kube-controller-manager"><a href="#kube-controller-manager" class="headerlink" title="kube-controller-manager"></a>kube-controller-manager</h2><p>kube-controller-manager 运行管理控制器，包括：</p>
+<ul>
+<li>节点（Node）控制器</li>
+<li>副本（Replication）控制器，负责维护系统中每个副本中的pod</li>
+<li>端点（Endpoints）控制器，填充Endpoints对象（连接services&amp;pods)</li>
+<li>Service-Account和Token控制器，为新的Namespace创建默认账户访问API Token</li>
+</ul>
+<h2 id="cloud-controller-manager"><a href="#cloud-controller-manager" class="headerlink" title="cloud-controller-manager"></a>cloud-controller-manager</h2><p>cloud-controller-manager 负责与底层云服务提供商平台交互，具体功能：</p>
+<ul>
+<li>节点（Node）控制器</li>
+<li>路由（Route）控制器</li>
+<li>Service控制器</li>
+<li>卷（Volume）控制器</li>
+</ul>
+<h2 id="addons"><a href="#addons" class="headerlink" title="addons"></a>addons</h2><p>addons 插件是实现集群pod和Services功能。Pod由Deployments，ReplicationController等进行管理。Namespace插件对象是在kube-system Namespace中创建</p>
+<h2 id="DNS"><a href="#DNS" class="headerlink" title="DNS"></a>DNS</h2><p>DNS 为k8s service提供DNS记录</p>
+<h2 id="kube-ui"><a href="#kube-ui" class="headerlink" title="kube-ui"></a>kube-ui</h2><p>kube-ui 提供集群状态基础信息查看</p>
+<h2 id="容器资源监测"><a href="#容器资源监测" class="headerlink" title="容器资源监测"></a>容器资源监测</h2><p>容器资源监测 提供一个UI浏览监控数据</p>
+<h2 id="cluster-level-logging"><a href="#cluster-level-logging" class="headerlink" title="cluster-level logging"></a>cluster-level logging</h2><p>cluster-level logging 负责保存容器日志，搜索、查看日志</p>
+<h1 id="节点（Node）组件"><a href="#节点（Node）组件" class="headerlink" title="节点（Node）组件"></a>节点（Node）组件</h1><p>节点组件运行在Node中，提供k8s运行时环境，以及维护Pod</p>
+<h2 id="kubelet"><a href="#kubelet" class="headerlink" title="kubelet"></a>kubelet</h2><p>kubelet 主要的节点代理，他会监视已分配节点的pod，具体功能：</p>
+<ul>
+<li>安装pod所需的volume</li>
+<li>下载pod的secrets</li>
+<li>pod中运行的docker容器</li>
+<li>定期执行容器健康检查</li>
+<li>在创建镜像pod时，返回pod的状态</li>
+<li>返回node的状态</li>
+</ul>
+<h2 id="kube-proxy"><a href="#kube-proxy" class="headerlink" title="kube-proxy"></a>kube-proxy</h2><p> kube-proxy 通过在主机上维护网络规则并执行连接转发来实现k8s服务抽象</p>
+<h2 id="docker"><a href="#docker" class="headerlink" title="docker"></a>docker</h2><p>docker 运行的容器</p>
+<h2 id="RKT"><a href="#RKT" class="headerlink" title="RKT"></a>RKT</h2><p>RKT 运行容器，作为docker工具的替代方案</p>
+<h2 id="supervisord"><a href="#supervisord" class="headerlink" title="supervisord"></a>supervisord</h2><p>supervisord 轻量级的监控系统，用于保障kubelet和docker运行</p>
+<h2 id="fluentd"><a href="#fluentd" class="headerlink" title="fluentd"></a>fluentd</h2><p>fluentd 提供cluster-level logging</p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="tags/k8s/" rel="tag"># k8s</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="net-http-cookie" rel="next" title="net-http-cookie">
+                <i class="fa fa-chevron-left"></i> net-http-cookie
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="k8s-对象" rel="prev" title="k8s-对象">
+                k8s-对象 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">dhainidewo</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">8</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="categories/index.html">
+                  <span class="site-state-item-count">2</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="tags/index.html">
+                  <span class="site-state-item-count">4</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://github.com/daihainidewo" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-globe"></i>GitHub</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#master-组件"><span class="nav-number">1.</span> <span class="nav-text">master 组件</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#kube-apiserver"><span class="nav-number">1.1.</span> <span class="nav-text">kube-apiserver</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#ETCD"><span class="nav-number">1.2.</span> <span class="nav-text">ETCD</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#kube-controller-manager"><span class="nav-number">1.3.</span> <span class="nav-text">kube-controller-manager</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#cloud-controller-manager"><span class="nav-number">1.4.</span> <span class="nav-text">cloud-controller-manager</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#addons"><span class="nav-number">1.5.</span> <span class="nav-text">addons</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#DNS"><span class="nav-number">1.6.</span> <span class="nav-text">DNS</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#kube-ui"><span class="nav-number">1.7.</span> <span class="nav-text">kube-ui</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#容器资源监测"><span class="nav-number">1.8.</span> <span class="nav-text">容器资源监测</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#cluster-level-logging"><span class="nav-number">1.9.</span> <span class="nav-text">cluster-level logging</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#节点（Node）组件"><span class="nav-number">2.</span> <span class="nav-text">节点（Node）组件</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#kubelet"><span class="nav-number">2.1.</span> <span class="nav-text">kubelet</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#kube-proxy"><span class="nav-number">2.2.</span> <span class="nav-text">kube-proxy</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#docker"><span class="nav-number">2.3.</span> <span class="nav-text">docker</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#RKT"><span class="nav-number">2.4.</span> <span class="nav-text">RKT</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#supervisord"><span class="nav-number">2.5.</span> <span class="nav-text">supervisord</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#fluentd"><span class="nav-number">2.6.</span> <span class="nav-text">fluentd</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">dhainidewo</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Muse</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
