@@ -89,7 +89,7 @@
 <meta property="og:locale" content="zh-Hans">
 <meta property="og:image" content="http://i2.51cto.com/images/blog/201805/24/3e8fa6293a53f2d17d221daf6413ce50.png?x-oss-process=image/watermark,size_16,text_QDUxQ1RP5Y2a5a6i,color_FFFFFF,t_100,g_se,x_10,y_10,shadow_90,type_ZmFuZ3poZW5naGVpdGk=">
 <meta property="og:image" content="http://i2.51cto.com/images/blog/201805/24/c1b9214cc1f1bf9bcc9b0f8df32fa1d6.jpg?x-oss-process=image/watermark,size_16,text_QDUxQ1RP5Y2a5a6i,color_FFFFFF,t_100,g_se,x_10,y_10,shadow_90,type_ZmFuZ3poZW5naGVpdGk=">
-<meta property="og:updated_time" content="2018-08-06T02:42:25.271Z">
+<meta property="og:updated_time" content="2018-08-20T02:11:43.740Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Kubernetes创建pod一直处于ContainerCreating排查和解决">
 <meta name="twitter:description" content="用k8s创建完pod后，发现无法访问demo应用，查了一下pods状态，发现都在containercreationg状态中。">
@@ -331,29 +331,19 @@
 <p>其中最主要的问题是：details: (open /etc/docker/certs.d/registry.access.redhat.com/redhat-ca.crt: no such file or directory)</p>
 <p>解决方案：</p>
 <p>查看/etc/docker/certs.d/registry.access.redhat.com/redhat-ca.crt （该链接就是上图中的说明） 是一个软链接，但是链接过去后并没有真实的/etc/rhsm，所以需要使用yum安装：</p>
-<p>yum install <em>rhsm</em></p>
+<p><code>yum install *rhsm*</code></p>
 <p>安装完成后，执行一下docker pull registry.access.redhat.com/rhel7/pod-infrastructure:latest</p>
 <p>如果依然报错，可参考下面的方案：</p>
 <p>wget <a href="http://mirror.centos.org/centos/7/os/x86_64/Packages/python-rhsm-certificates-1.19.10-1.el7_4.x86_64.rpm" target="_blank" rel="noopener">http://mirror.centos.org/centos/7/os/x86_64/Packages/python-rhsm-certificates-1.19.10-1.el7_4.x86_64.rpm</a><br>rpm2cpio python-rhsm-certificates-1.19.10-1.el7_4.x86_64.rpm | cpio -iv –to-stdout ./etc/rhsm/ca/redhat-uep.pem | tee /etc/rhsm/ca/redhat-uep.pem</p>
 <p>这两个命令会生成/etc/rhsm/ca/redhat-uep.pem文件.</p>
 <p>顺得的话会得到下面的结果。</p>
-<p>[root@localhost]# docker pull registry.access.redhat.com/rhel7/pod-infrastructure:latest</p>
-<p>Trying to pull repository registry.access.redhat.com/rhel7/pod-infrastructure …</p>
-<p>latest: Pulling from registry.access.redhat.com/rhel7/pod-infrastructure</p>
-<p>26e5ed6899db: Pull complete</p>
-<p>66dbe984a319: Pull complete</p>
-<p>9138e7863e08: Pull complete</p>
-<p>Digest: sha256:92d43c37297da3ab187fc2b9e9ebfb243c1110d446c783ae1b989088495db931</p>
-<p>Status: Downloaded newer image for registry.access.redhat.com/rhel7/pod-infrastructure:latest</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">[root@localhost]#</span> docker pull registry.access.redhat.com/rhel7/pod-infrastructure:latest</span><br><span class="line"></span><br><span class="line">Trying to pull repository registry.access.redhat.com/rhel7/pod-infrastructure ...</span><br><span class="line"></span><br><span class="line">latest: Pulling from registry.access.redhat.com/rhel7/pod-infrastructure</span><br><span class="line"></span><br><span class="line">26e5ed6899db: Pull complete</span><br><span class="line"></span><br><span class="line">66dbe984a319: Pull complete</span><br><span class="line"></span><br><span class="line">9138e7863e08: Pull complete</span><br><span class="line"></span><br><span class="line">Digest: sha256:92d43c37297da3ab187fc2b9e9ebfb243c1110d446c783ae1b989088495db931</span><br><span class="line"></span><br><span class="line">Status: Downloaded newer image for registry.access.redhat.com/rhel7/pod-infrastructure:latest</span><br></pre></td></tr></table></figure>
 <p>删除原来创建的rc</p>
-<p>[root@localhost /]# kubectl delete -f mysql-rc.yaml</p>
+<p><code>[root@localhost /]# kubectl delete -f mysql-rc.yaml</code></p>
 <p>重新创建</p>
-<p>[root@localhost /]# kubectl create -f mysql-rc.yaml</p>
-<p>replicationcontroller “mysql” created</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost /]# kubectl create -f mysql-rc.yaml</span><br><span class="line"></span><br><span class="line">replicationcontroller "mysql" created</span><br></pre></td></tr></table></figure>
 <p>再次查看状态</p>
-<p>[root@localhost /]# kubectl get pod</p>
-<p>NAME READY STATUS RESTARTS AGE</p>
-<p>mysql-b8m2q 1/1 Running 0 27m</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost /]# kubectl get pod</span><br><span class="line"></span><br><span class="line">NAME READY STATUS RESTARTS AGE</span><br><span class="line"></span><br><span class="line">mysql-b8m2q 1/1 Running 0 27m</span><br></pre></td></tr></table></figure>
 <p>一切正常。</p>
 
       
@@ -465,7 +455,7 @@
               
                 <a href="../archives/">
               
-                  <span class="site-state-item-count">26</span>
+                  <span class="site-state-item-count">30</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -476,7 +466,7 @@
               
               <div class="site-state-item site-state-categories">
                 <a href="../categories/index.html">
-                  <span class="site-state-item-count">5</span>
+                  <span class="site-state-item-count">6</span>
                   <span class="site-state-item-name">分类</span>
                 </a>
               </div>
@@ -487,7 +477,7 @@
               
               <div class="site-state-item site-state-tags">
                 <a href="../tags/index.html">
-                  <span class="site-state-item-count">10</span>
+                  <span class="site-state-item-count">13</span>
                   <span class="site-state-item-name">标签</span>
                 </a>
               </div>
@@ -513,6 +503,24 @@
           
 
           
+          
+            <div class="links-of-blogroll motion-element links-of-blogroll-block">
+              <div class="links-of-blogroll-title">
+                <i class="fa  fa-fw fa-link"></i>
+                Links
+              </div>
+              <ul class="links-of-blogroll-list">
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="http://www.xingximing.cn/" title="xxm" target="_blank">xxm</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://www.fuweihu.xyz/" title="fwh" target="_blank">fwh</a>
+                  </li>
+                
+              </ul>
+            </div>
           
 
           

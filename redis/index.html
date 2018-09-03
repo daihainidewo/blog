@@ -1,0 +1,905 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="../lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="../lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="../css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="../images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="../images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="../images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="../images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="base," />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="了解一下redis redis 简介介绍redis是一个高性能key-value缓存数据库，具有如下特点：  数据支持持久化 支持很多数据类型 支持数据备份  优势 性能极高，读110k次每秒，写81k次每秒 丰富的数据类型 原子性，redis所有的操作都是原子性，多个操作也是支持事务 丰富特性，支持发布和订阅">
+<meta name="keywords" content="base">
+<meta property="og:type" content="article">
+<meta property="og:title" content="redis">
+<meta property="og:url" content="https://daihainidewo.github.io/redis/index.html">
+<meta property="og:site_name" content="dhainidewo blog">
+<meta property="og:description" content="了解一下redis redis 简介介绍redis是一个高性能key-value缓存数据库，具有如下特点：  数据支持持久化 支持很多数据类型 支持数据备份  优势 性能极高，读110k次每秒，写81k次每秒 丰富的数据类型 原子性，redis所有的操作都是原子性，多个操作也是支持事务 丰富特性，支持发布和订阅">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2018-09-03T08:29:47.652Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="redis">
+<meta name="twitter:description" content="了解一下redis redis 简介介绍redis是一个高性能key-value缓存数据库，具有如下特点：  数据支持持久化 支持很多数据类型 支持数据备份  优势 性能极高，读110k次每秒，写81k次每秒 丰富的数据类型 原子性，redis所有的操作都是原子性，多个操作也是支持事务 丰富特性，支持发布和订阅">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/blog/',
+    scheme: 'Muse',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://daihainidewo.github.io/redis/"/>
+
+
+
+
+
+  <title>redis | dhainidewo blog</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/blog/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">dhainidewo blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">note study problem</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://daihainidewo.github.io">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="dhainidewo">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="../images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="dhainidewo blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">redis</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-09-03T10:49:44+08:00">
+                2018-09-03
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="../categories/redis/" itemprop="url" rel="index">
+                    <span itemprop="name">redis</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>了解一下redis</p>
+<h1 id="redis-简介"><a href="#redis-简介" class="headerlink" title="redis 简介"></a>redis 简介</h1><h2 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h2><p>redis是一个高性能key-value缓存数据库，具有如下特点：</p>
+<ul>
+<li>数据支持持久化</li>
+<li>支持很多数据类型</li>
+<li>支持数据备份</li>
+</ul>
+<h2 id="优势"><a href="#优势" class="headerlink" title="优势"></a>优势</h2><ul>
+<li>性能极高，读110k次每秒，写81k次每秒</li>
+<li>丰富的数据类型</li>
+<li>原子性，redis所有的操作都是原子性，多个操作也是支持事务</li>
+<li>丰富特性，支持发布和订阅<a id="more"></a>
+</li>
+</ul>
+<h1 id="redis-命令"><a href="#redis-命令" class="headerlink" title="redis 命令"></a>redis 命令</h1><h2 id="redis-key"><a href="#redis-key" class="headerlink" title="redis key"></a>redis key</h2><h3 id="DEL-key"><a href="#DEL-key" class="headerlink" title="DEL key"></a>DEL key</h3><p>DEL 删除键<br><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">127.0.0.1:6379&gt; del test</span><br><span class="line">(integer) 1</span><br><span class="line">127.0.0.1:6379&gt; del tests</span><br><span class="line">(integer) 0</span><br></pre></td></tr></table></figure></p>
+<h3 id="DUMP-key"><a href="#DUMP-key" class="headerlink" title="DUMP key"></a>DUMP key</h3><p>DUMP 序列化给定的key，并返回序列化的值<br><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">127.0.0.1:6379&gt; dump test</span><br><span class="line">"\x00\x04test\a\x00~\xa2zSd;e_"</span><br><span class="line">127.0.0.1:6379&gt; dump tests</span><br><span class="line">(nil)</span><br></pre></td></tr></table></figure></p>
+<h3 id="EXISTS-key"><a href="#EXISTS-key" class="headerlink" title="EXISTS key"></a>EXISTS key</h3><p>EXISTS 检查一个key是否存在<br><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">127.0.0.1:6379&gt; exists test</span><br><span class="line">(integer) 1</span><br><span class="line">127.0.0.1:6379&gt; exists tests</span><br><span class="line">(integer) 0</span><br></pre></td></tr></table></figure></p>
+<h3 id="EXPIRE-key-seconds"><a href="#EXPIRE-key-seconds" class="headerlink" title="EXPIRE key seconds"></a>EXPIRE key seconds</h3><p>EXPIRE 给指定的key设置过期时间，单位秒<br><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">127.0.0.1:6379&gt; expire test 1000</span><br><span class="line">(integer) 1</span><br><span class="line">127.0.0.1:6379&gt; expire tests 1000</span><br><span class="line">(integer) 0</span><br></pre></td></tr></table></figure></p>
+<h3 id="EXPIREAT-key-timestamp"><a href="#EXPIREAT-key-timestamp" class="headerlink" title="EXPIREAT key timestamp"></a>EXPIREAT key timestamp</h3><p>EXPIREAT 给指定的key设置过期时间，接收参数是UNIX时间戳<br><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">127.0.0.1:6379&gt; expireat test 159999999999</span><br><span class="line">(integer) 1</span><br><span class="line">127.0.0.1:6379&gt; expireat tests 159999999999</span><br><span class="line">(integer) 0</span><br></pre></td></tr></table></figure></p>
+<h3 id="PEXPIRE-key-milliseconds"><a href="#PEXPIRE-key-milliseconds" class="headerlink" title="PEXPIRE key milliseconds"></a>PEXPIRE key milliseconds</h3><p>PEXPIRE 给指定的key设置过期时间，单位毫秒</p>
+<h3 id="PEXPIREAT-key-milliseconds-timestamp"><a href="#PEXPIREAT-key-milliseconds-timestamp" class="headerlink" title="PEXPIREAT key milliseconds-timestamp"></a>PEXPIREAT key milliseconds-timestamp</h3><p>PEXPIREAT 给指定的key设置过期时间，单位为UNIX毫秒时间戳</p>
+<h3 id="KEYS-pattern"><a href="#KEYS-pattern" class="headerlink" title="KEYS pattern"></a>KEYS pattern</h3><p>KEYS 查找多有符合给定模式的key</p>
+<h3 id="MOVE-key-db"><a href="#MOVE-key-db" class="headerlink" title="MOVE key db"></a>MOVE key db</h3><p>MOVE 将当前数据库的key移动到给定的数据库中</p>
+<h3 id="PERSIST-key"><a href="#PERSIST-key" class="headerlink" title="PERSIST key"></a>PERSIST key</h3><p>PERSIST 移除key的过期时间</p>
+<h3 id="PTTL-key"><a href="#PTTL-key" class="headerlink" title="PTTL key"></a>PTTL key</h3><p>PTTL 以毫秒为单位返回key的剩余过期时间</p>
+<h3 id="TTL-key"><a href="#TTL-key" class="headerlink" title="TTL key"></a>TTL key</h3><p>TTL 以秒为单位返回给定key的生存时间</p>
+<h3 id="RANDOMKEY"><a href="#RANDOMKEY" class="headerlink" title="RANDOMKEY"></a>RANDOMKEY</h3><p>RANDOMKEY 从当前数据库中随机返回一个key</p>
+<h3 id="RENAME-key"><a href="#RENAME-key" class="headerlink" title="RENAME key"></a>RENAME key</h3><p>RENAME 修改key的名称</p>
+<h3 id="RENAMENX-key-newkey"><a href="#RENAMENX-key-newkey" class="headerlink" title="RENAMENX key newkey"></a>RENAMENX key newkey</h3><p>RENAMENX 仅当newkey不存在时，将key改成newkey</p>
+<h3 id="TYPE-key"><a href="#TYPE-key" class="headerlink" title="TYPE key"></a>TYPE key</h3><p>TYPE 返回key所存储的值的类型</p>
+<h2 id="redis-string"><a href="#redis-string" class="headerlink" title="redis string"></a>redis string</h2><h3 id="SET-key-value"><a href="#SET-key-value" class="headerlink" title="SET key value"></a>SET key value</h3><p>SET 设置指定key的值</p>
+<h3 id="GET-key"><a href="#GET-key" class="headerlink" title="GET key"></a>GET key</h3><p>GET 获取指定key的值</p>
+<h3 id="GETRANGE-key-start-end"><a href="#GETRANGE-key-start-end" class="headerlink" title="GETRANGE key start end"></a>GETRANGE key start end</h3><p>GETRANGE 返回key中字符串值的子字符串</p>
+<h3 id="GETSET-key-value"><a href="#GETSET-key-value" class="headerlink" title="GETSET key value"></a>GETSET key value</h3><p>GETSET 将给定key的值设为value，并返回key的旧值</p>
+<h3 id="GETBIT-key-offset"><a href="#GETBIT-key-offset" class="headerlink" title="GETBIT key offset"></a>GETBIT key offset</h3><p>GETBIT 对key所存储的字符串值，获取指定offset的位</p>
+<h3 id="MGET-key1-key2…"><a href="#MGET-key1-key2…" class="headerlink" title="MGET key1 [key2…]"></a>MGET key1 [key2…]</h3><p>MGET 获取所有一个或多个给定key的值</p>
+<h3 id="SETBIT-key-offset-value"><a href="#SETBIT-key-offset-value" class="headerlink" title="SETBIT key offset value"></a>SETBIT key offset value</h3><p>SETBIT 对key所存储的字符串值，设置或清除指定偏移量上的bit位</p>
+<h3 id="SETEX-key-seconds-value"><a href="#SETEX-key-seconds-value" class="headerlink" title="SETEX key seconds value"></a>SETEX key seconds value</h3><p>SETEX 将value关联到key，并将key的过期时间设为seconds</p>
+<h3 id="SETNX-key-value"><a href="#SETNX-key-value" class="headerlink" title="SETNX key value"></a>SETNX key value</h3><p>SETNX 只有在key不存在时设置key的值</p>
+<h3 id="SETRANGE-key-offset-value"><a href="#SETRANGE-key-offset-value" class="headerlink" title="SETRANGE key offset value"></a>SETRANGE key offset value</h3><p>SETRANGE 用value参数复写给定key所存储的字符串值，从偏移量offset开始</p>
+<h3 id="STRLEN-key"><a href="#STRLEN-key" class="headerlink" title="STRLEN key"></a>STRLEN key</h3><p>STRLEN 返回key所存储的字符串值的长度</p>
+<h3 id="MSET-key-value-key-value…"><a href="#MSET-key-value-key-value…" class="headerlink" title="MSET key value [key value…]"></a>MSET key value [key value…]</h3><p>MSET 同时设置一个或多个key-value对</p>
+<h3 id="MSETNX-key-value-key-value…"><a href="#MSETNX-key-value-key-value…" class="headerlink" title="MSETNX key value [key value…]"></a>MSETNX key value [key value…]</h3><p>MSETNX 同时设置一个或多个key-value对，当且仅当所有给定key都不存在</p>
+<h3 id="PSETEX-key-milliseconds-value"><a href="#PSETEX-key-milliseconds-value" class="headerlink" title="PSETEX key milliseconds value"></a>PSETEX key milliseconds value</h3><p>PSETEX 以毫秒为单位设置key的生存时间</p>
+<h3 id="INCR-key"><a href="#INCR-key" class="headerlink" title="INCR key"></a>INCR key</h3><p>INCR 将key中存储的数字值增一</p>
+<h3 id="INCRBY-key-increment"><a href="#INCRBY-key-increment" class="headerlink" title="INCRBY key increment"></a>INCRBY key increment</h3><p>INCRBY 给key增加指定增量 </p>
+<h3 id="INCRBYFLOAT-key-increment"><a href="#INCRBYFLOAT-key-increment" class="headerlink" title="INCRBYFLOAT key increment"></a>INCRBYFLOAT key increment</h3><p>INCRBYFLOAT 将key所存储的值奖赏给定的浮点增量值</p>
+<h3 id="DECR-key"><a href="#DECR-key" class="headerlink" title="DECR key"></a>DECR key</h3><p>DECR 将key中存储的数字值减一</p>
+<h3 id="DECRBY-key-decrement"><a href="#DECRBY-key-decrement" class="headerlink" title="DECRBY key decrement"></a>DECRBY key decrement</h3><p>DECRBY 将所存储的值减去给定的减量值</p>
+<h3 id="APPEND-key-value"><a href="#APPEND-key-value" class="headerlink" title="APPEND key value"></a>APPEND key value</h3><p>APPEND 如果key已经存在并且是一个字符串，APPEND将指定的value追加到key原来值value的末尾</p>
+<h2 id="redis-hash"><a href="#redis-hash" class="headerlink" title="redis hash"></a>redis hash</h2><h3 id="HDEL-key-field1-field2…"><a href="#HDEL-key-field1-field2…" class="headerlink" title="HDEL key field1 [field2…]"></a>HDEL key field1 [field2…]</h3><p>HDEL 删除一个或多个哈希表字段</p>
+<h3 id="HEXISTS-key-field"><a href="#HEXISTS-key-field" class="headerlink" title="HEXISTS key field"></a>HEXISTS key field</h3><p>HEXISTS 查看哈希表key中，指定的字段是否存在</p>
+<h3 id="HGET-key-field"><a href="#HGET-key-field" class="headerlink" title="HGET key field"></a>HGET key field</h3><p>HGET 获取存储在哈希表中指定字段的值</p>
+<h3 id="HGETALL-key"><a href="#HGETALL-key" class="headerlink" title="HGETALL key"></a>HGETALL key</h3><p>HGETALL 获取在哈希表中指定key的所有字段和值</p>
+<h3 id="HINCRBY-key-field-increment"><a href="#HINCRBY-key-field-increment" class="headerlink" title="HINCRBY key field increment"></a>HINCRBY key field increment</h3><p>HINCRBY 为哈希表中的指定字段的整数值增量加increment</p>
+<h3 id="HINCRBYFLOAT-key-field-increment"><a href="#HINCRBYFLOAT-key-field-increment" class="headerlink" title="HINCRBYFLOAT key field increment"></a>HINCRBYFLOAT key field increment</h3><p>HINCRBYFLOAT 为哈希表key的指定字段的浮点数值加上增量increment</p>
+<h3 id="HKEYS-key"><a href="#HKEYS-key" class="headerlink" title="HKEYS key"></a>HKEYS key</h3><p>HKEYS 获取所有哈希表中的字段</p>
+<h3 id="HLEN-key"><a href="#HLEN-key" class="headerlink" title="HLEN key"></a>HLEN key</h3><p>HLEN 获取哈希表中字段的数量</p>
+<h3 id="HMGET-key-field1-field2…"><a href="#HMGET-key-field1-field2…" class="headerlink" title="HMGET key field1 [field2…]"></a>HMGET key field1 [field2…]</h3><p>HMGET 获取所有给定字段的值</p>
+<h3 id="HMSET-key-field1-value1-field2-value2…"><a href="#HMSET-key-field1-value1-field2-value2…" class="headerlink" title="HMSET key field1 value1 [field2 value2…]"></a>HMSET key field1 value1 [field2 value2…]</h3><p>HMSET 同时将多个field-value对设置到哈希表key中</p>
+<h3 id="HSET-key-field-value"><a href="#HSET-key-field-value" class="headerlink" title="HSET key field value"></a>HSET key field value</h3><p>HSET 将哈希表key中的字段field的值设置为value</p>
+<h3 id="HSETNX-key-field-value"><a href="#HSETNX-key-field-value" class="headerlink" title="HSETNX key field value"></a>HSETNX key field value</h3><p>HSETNX 只有字段field不存在时，设置哈希表字段的值</p>
+<h3 id="HVALS-key"><a href="#HVALS-key" class="headerlink" title="HVALS key"></a>HVALS key</h3><p>HVALS 获取哈希表中所有值</p>
+<h3 id="HSCAN-key-cursor-MATCH-pattern-COUNT-count"><a href="#HSCAN-key-cursor-MATCH-pattern-COUNT-count" class="headerlink" title="HSCAN key cursor [MATCH pattern] [COUNT count]"></a>HSCAN key cursor [MATCH pattern] [COUNT count]</h3><p>HSCAN 迭代哈希表中的键值对</p>
+<h2 id="redis-list"><a href="#redis-list" class="headerlink" title="redis list"></a>redis list</h2><h3 id="BLPOP-key1-key2-timeout"><a href="#BLPOP-key1-key2-timeout" class="headerlink" title="BLPOP key1 [key2] timeout"></a>BLPOP key1 [key2] timeout</h3><p>BLPOP 移除并获取列表的第一个元素，如果列表没有元素会阻塞列表直到等待超时或发现可弹出元素为止</p>
+<h3 id="BRPOP-key1-key2-timeout"><a href="#BRPOP-key1-key2-timeout" class="headerlink" title="BRPOP key1 [key2] timeout"></a>BRPOP key1 [key2] timeout</h3><p>BRPOP 移除并获取列表最后一个元素，如果列表没有元素会阻塞列表知道等待超时或发现可弹出元素为止</p>
+<h3 id="BRPOPLPUSH-source-destination-timeout"><a href="#BRPOPLPUSH-source-destination-timeout" class="headerlink" title="BRPOPLPUSH source destination timeout"></a>BRPOPLPUSH source destination timeout</h3><p>BRPOPLPUSH 从列表中弹出一个值，将弹出的元素插入到另一个列表中返回他，如果没有元素会阻塞列表知道等待超时或发现可弹出元素为止</p>
+<h3 id="LINDEX-key-index"><a href="#LINDEX-key-index" class="headerlink" title="LINDEX key index"></a>LINDEX key index</h3><p>LINDEX 通过索引获取列表中的元素</p>
+<h3 id="LINSERT-key-BEFORE-AFTER-pivot-value"><a href="#LINSERT-key-BEFORE-AFTER-pivot-value" class="headerlink" title="LINSERT key BEFORE|AFTER pivot value"></a>LINSERT key BEFORE|AFTER pivot value</h3><p>LINSERT 往列表的前或者后插入元素</p>
+<h3 id="LLEN-key"><a href="#LLEN-key" class="headerlink" title="LLEN key"></a>LLEN key</h3><p>LLEN 获取列表长度</p>
+<h3 id="LPOP-key"><a href="#LPOP-key" class="headerlink" title="LPOP key"></a>LPOP key</h3><p>LPOP 移除并获取第一个元素</p>
+<h3 id="LPUSH-key-value1-value2…"><a href="#LPUSH-key-value1-value2…" class="headerlink" title="LPUSH key value1 [value2…]"></a>LPUSH key value1 [value2…]</h3><p>LPUSH 将一个值或多个值插入列表头部</p>
+<h3 id="LPUSHX-key-value"><a href="#LPUSHX-key-value" class="headerlink" title="LPUSHX key value"></a>LPUSHX key value</h3><p>LPUSHX 将一个值插入到已存在的列表头部</p>
+<h3 id="LRANGE-key-start-stop"><a href="#LRANGE-key-start-stop" class="headerlink" title="LRANGE key start stop"></a>LRANGE key start stop</h3><p>LRANGE 获取列表指定范围内的元素</p>
+<h3 id="LREM-key-count-value"><a href="#LREM-key-count-value" class="headerlink" title="LREM key count value"></a>LREM key count value</h3><p>LREM 移除列表元素</p>
+<h3 id="LSET-key-index-value"><a href="#LSET-key-index-value" class="headerlink" title="LSET key index value"></a>LSET key index value</h3><p>LSET 通过索引设置列表元素的值</p>
+<h3 id="LTRIM-key-start-stop"><a href="#LTRIM-key-start-stop" class="headerlink" title="LTRIM key start stop"></a>LTRIM key start stop</h3><p>LTRIM 对一个列表进行修剪，只保留start和stop区间内的元素，其他范围的元素都会被删除</p>
+<h3 id="RPOP-key"><a href="#RPOP-key" class="headerlink" title="RPOP key"></a>RPOP key</h3><p>RPOP 移除并获取列表最后一个元素</p>
+<h3 id="RPOPLPUSH-source-destination"><a href="#RPOPLPUSH-source-destination" class="headerlink" title="RPOPLPUSH source destination"></a>RPOPLPUSH source destination</h3><p>RPOPLPUSH 移除列表最后一个元素，并将该元素添加到另一个列表中返回</p>
+<h3 id="RPUSH-key-value1-value2…"><a href="#RPUSH-key-value1-value2…" class="headerlink" title="RPUSH key value1 [value2…]"></a>RPUSH key value1 [value2…]</h3><p>RPUSH 在列表中添加一个或多个值</p>
+<h3 id="RPUSHX-key-value"><a href="#RPUSHX-key-value" class="headerlink" title="RPUSHX key value"></a>RPUSHX key value</h3><p>RPUSHX 唯一存在的列表添加值</p>
+<h2 id="redis-set"><a href="#redis-set" class="headerlink" title="redis set"></a>redis set</h2><h3 id="SADD-key-member1-member2…"><a href="#SADD-key-member1-member2…" class="headerlink" title="SADD key member1 [member2…]"></a>SADD key member1 [member2…]</h3><p>SADD 向集合里面添加一个或多个成员</p>
+<h3 id="SCARD-key"><a href="#SCARD-key" class="headerlink" title="SCARD key"></a>SCARD key</h3><p>SCARD 获取集合的成员数</p>
+<h3 id="SDIFF-key1-key2…"><a href="#SDIFF-key1-key2…" class="headerlink" title="SDIFF key1 [key2…]"></a>SDIFF key1 [key2…]</h3><p>SDIFF 返回所有给定集合的差集</p>
+<h3 id="SDIFFSTORE-destination-key1-key2…"><a href="#SDIFFSTORE-destination-key1-key2…" class="headerlink" title="SDIFFSTORE destination key1 [key2…]"></a>SDIFFSTORE destination key1 [key2…]</h3><p>SDIFFSTORE 返回所有给定集合的差集，并存储在destination中</p>
+<h3 id="SINTER-key1-key2…"><a href="#SINTER-key1-key2…" class="headerlink" title="SINTER key1 [key2…]"></a>SINTER key1 [key2…]</h3><p>SINTER 返回给定集合的交集</p>
+<h3 id="SINTERSTORE-destination-key1-key2…"><a href="#SINTERSTORE-destination-key1-key2…" class="headerlink" title="SINTERSTORE destination key1 [key2…]"></a>SINTERSTORE destination key1 [key2…]</h3><p>SINTERSTORE 返回给定所有集合的交集并存储在destination中</p>
+<h3 id="SISMEMBER-key-member"><a href="#SISMEMBER-key-member" class="headerlink" title="SISMEMBER key member"></a>SISMEMBER key member</h3><p>SISMEMBER 判断member是否是key的成员</p>
+<h3 id="SMEMBERS-key"><a href="#SMEMBERS-key" class="headerlink" title="SMEMBERS key"></a>SMEMBERS key</h3><p>SMEMBERS 返回集合中的所有成员</p>
+<h3 id="SMOVE-source-destination-member"><a href="#SMOVE-source-destination-member" class="headerlink" title="SMOVE source destination member"></a>SMOVE source destination member</h3><p>SMOVE 将member元素从source集合移动到destination集合</p>
+<h3 id="SPOP-key"><a href="#SPOP-key" class="headerlink" title="SPOP key"></a>SPOP key</h3><p>SPOP 移除并返回集合中的一个随机元素</p>
+<h3 id="SRANDMEMBER-key-count"><a href="#SRANDMEMBER-key-count" class="headerlink" title="SRANDMEMBER key [count]"></a>SRANDMEMBER key [count]</h3><p>SRANDMEMBER 返回集合中一个或多个随机数</p>
+<h3 id="SREM-key-member1-member2"><a href="#SREM-key-member1-member2" class="headerlink" title="SREM key member1 [member2]"></a>SREM key member1 [member2]</h3><p>SREM 移除集合中的成员</p>
+<h3 id="SUNION-key1-key2…"><a href="#SUNION-key1-key2…" class="headerlink" title="SUNION key1 [key2…]"></a>SUNION key1 [key2…]</h3><p>SUNION 返回所有给定集合的并集</p>
+<h3 id="SUNIONSTORE-destination-key1-key2…"><a href="#SUNIONSTORE-destination-key1-key2…" class="headerlink" title="SUNIONSTORE destination key1 [key2…]"></a>SUNIONSTORE destination key1 [key2…]</h3><p>SUNIONSTORE 将所有集合的并集存储到destination集合中</p>
+<h3 id="SSCAN-key-cursor-MATCH-pattern-COUNT-count"><a href="#SSCAN-key-cursor-MATCH-pattern-COUNT-count" class="headerlink" title="SSCAN key cursor [MATCH pattern] [COUNT count]"></a>SSCAN key cursor [MATCH pattern] [COUNT count]</h3><p>SSCAN 迭代集合中的元素</p>
+<h2 id="redis-sorted-set"><a href="#redis-sorted-set" class="headerlink" title="redis sorted set"></a>redis sorted set</h2><h3 id="ZADD-key-score1-member1-score2-member2…"><a href="#ZADD-key-score1-member1-score2-member2…" class="headerlink" title="ZADD key score1 member1 [score2 member2…]"></a>ZADD key score1 member1 [score2 member2…]</h3><p>ZADD 向有序集合添加一个或多个成员数，或更新已存在成员的分数</p>
+<h3 id="ZCARD-key"><a href="#ZCARD-key" class="headerlink" title="ZCARD key"></a>ZCARD key</h3><p>ZCARD 获取有序集合的成员数</p>
+<h3 id="ZCOUNT-key-min-max"><a href="#ZCOUNT-key-min-max" class="headerlink" title="ZCOUNT key min max"></a>ZCOUNT key min max</h3><p>ZCOUNT 计算有序集合指定区间分数的成员数</p>
+<h3 id="ZINCRBY-key-increment-member"><a href="#ZINCRBY-key-increment-member" class="headerlink" title="ZINCRBY key increment member"></a>ZINCRBY key increment member</h3><p>ZINCRBY 有序集合中对指定成员的分数加上增量increment</p>
+<h3 id="ZINTERSTORE-destination-numkeys-key-key-…"><a href="#ZINTERSTORE-destination-numkeys-key-key-…" class="headerlink" title="ZINTERSTORE destination numkeys key [key …]"></a>ZINTERSTORE destination numkeys key [key …]</h3><p>ZINTERSTORE 计算给定的一个或多个有序集的交集并将结果集存储在新的有序集合key中</p>
+<h3 id="ZLEXCOUNT-key-min-max"><a href="#ZLEXCOUNT-key-min-max" class="headerlink" title="ZLEXCOUNT key min max"></a>ZLEXCOUNT key min max</h3><p>ZLEXCOUNT 在有序集合中计算指定字典区间内成员数量</p>
+<h3 id="ZRANGE-key-start-stop-WITHSCORES"><a href="#ZRANGE-key-start-stop-WITHSCORES" class="headerlink" title="ZRANGE key start stop [WITHSCORES]"></a>ZRANGE key start stop [WITHSCORES]</h3><p>ZRANGE 通过索引区间返回有序集和成指定区间内的成员</p>
+<h3 id="ZRANGEBYLEX-key-min-max-LIMIT-offset-count"><a href="#ZRANGEBYLEX-key-min-max-LIMIT-offset-count" class="headerlink" title="ZRANGEBYLEX key min max [LIMIT offset count]"></a>ZRANGEBYLEX key min max [LIMIT offset count]</h3><p>ZRANGEBYLEX 通过字典区间返回有序集合的成员</p>
+<h3 id="ZRANGEBYSCORE-key-min-max-WITHSCORES-LIMIT"><a href="#ZRANGEBYSCORE-key-min-max-WITHSCORES-LIMIT" class="headerlink" title="ZRANGEBYSCORE key min max [WITHSCORES] [LIMIT]"></a>ZRANGEBYSCORE key min max [WITHSCORES] [LIMIT]</h3><p>ZRANGEBYSCORE 通过分数返回有序集合指定区间内的成员</p>
+<h3 id="ZRANK-key-member"><a href="#ZRANK-key-member" class="headerlink" title="ZRANK key member"></a>ZRANK key member</h3><p>ZRANK 返回有序集合中指定成员的索引</p>
+<h3 id="ZREM-key-member-member…"><a href="#ZREM-key-member-member…" class="headerlink" title="ZREM key member [member…]"></a>ZREM key member [member…]</h3><p>ZREM 移除有序集合中的一个或多个成员</p>
+<h3 id="ZREMRANGEBYLEX-key-min-max"><a href="#ZREMRANGEBYLEX-key-min-max" class="headerlink" title="ZREMRANGEBYLEX key min max"></a>ZREMRANGEBYLEX key min max</h3><p>ZREMRANGEBYLEX 移除有序集合中给定的字典区间的所有成员</p>
+<h3 id="ZREMRANGEBYRANK-key-start-stop"><a href="#ZREMRANGEBYRANK-key-start-stop" class="headerlink" title="ZREMRANGEBYRANK key start stop"></a>ZREMRANGEBYRANK key start stop</h3><p>ZREMRANGEBYRANK 移除有序集合中给定的字典区间和所有成员</p>
+<h3 id="ZREMRANGEBYSCORE-key-min-max"><a href="#ZREMRANGEBYSCORE-key-min-max" class="headerlink" title="ZREMRANGEBYSCORE key min max"></a>ZREMRANGEBYSCORE key min max</h3><p>ZREMRANGEBYSCORE 移除有序集合给定分数区间的所有成员</p>
+<h3 id="ZREVRANGE-key-start-stop-WITHSCORES"><a href="#ZREVRANGE-key-start-stop-WITHSCORES" class="headerlink" title="ZREVRANGE key start stop [WITHSCORES]"></a>ZREVRANGE key start stop [WITHSCORES]</h3><p>ZREVRANGE 返回有序集合指定区间的成员，通过索引，分数从高到低</p>
+<h3 id="ZREVRANGEBYSCORE-key-max-min-WITHSCORES"><a href="#ZREVRANGEBYSCORE-key-max-min-WITHSCORES" class="headerlink" title="ZREVRANGEBYSCORE key max min [WITHSCORES]"></a>ZREVRANGEBYSCORE key max min [WITHSCORES]</h3><p>ZREVRANGEBYSCORE 返回有序集合中制定分数区间内的成员，分数从高到低排序</p>
+<h3 id="ZREVRANK-key-member"><a href="#ZREVRANK-key-member" class="headerlink" title="ZREVRANK key member"></a>ZREVRANK key member</h3><p>ZREVRANK 返回有序集合中指定成员的排名，有序集合成员按分数值递减排序</p>
+<h3 id="ZSCORE-key-member"><a href="#ZSCORE-key-member" class="headerlink" title="ZSCORE key member"></a>ZSCORE key member</h3><p>ZSCORE 返回有序集中，成员的分数值</p>
+<h3 id="ZUNIONSTORE-destination-numkeys-key-key…"><a href="#ZUNIONSTORE-destination-numkeys-key-key…" class="headerlink" title="ZUNIONSTORE destination numkeys key [key…]"></a>ZUNIONSTORE destination numkeys key [key…]</h3><p>ZUNIONSTORE 计算给定的一个或多个有序集的并集，并存储在新的key中</p>
+<h3 id="ZSCAN-key-cursor-MATCH-pattern-COUNT-count"><a href="#ZSCAN-key-cursor-MATCH-pattern-COUNT-count" class="headerlink" title="ZSCAN key cursor [MATCH pattern] [COUNT count]"></a>ZSCAN key cursor [MATCH pattern] [COUNT count]</h3><p>ZSCAN 迭代有序结合中的元素，包括元素成员和元素分值</p>
+<h2 id="redis-HyperLogLog"><a href="#redis-HyperLogLog" class="headerlink" title="redis HyperLogLog"></a>redis HyperLogLog</h2><h3 id="PFADD-key-element-element…"><a href="#PFADD-key-element-element…" class="headerlink" title="PFADD key element [element…]"></a>PFADD key element [element…]</h3><p>PFADD 添加指定元素到HyperLogLog中</p>
+<h3 id="FPCOUNT-key-key…"><a href="#FPCOUNT-key-key…" class="headerlink" title="FPCOUNT key [key…]"></a>FPCOUNT key [key…]</h3><p>FPCOUNT 返回给定HyperLogLog的基数估算值</p>
+<h3 id="PFMERGE-destkey-sourcekey-sourcekey…"><a href="#PFMERGE-destkey-sourcekey-sourcekey…" class="headerlink" title="PFMERGE destkey sourcekey [sourcekey…]"></a>PFMERGE destkey sourcekey [sourcekey…]</h3><p>PFMERGE 将多个HyperLogLog合并为一个HyperLogLog</p>
+<h2 id="redis-SUB-PUB"><a href="#redis-SUB-PUB" class="headerlink" title="redis SUB/PUB"></a>redis SUB/PUB</h2><h3 id="PSUBSCRIBE-pattern-pattern…"><a href="#PSUBSCRIBE-pattern-pattern…" class="headerlink" title="PSUBSCRIBE pattern [pattern…]"></a>PSUBSCRIBE pattern [pattern…]</h3><p>PSUBSCRIBE 订阅一个或多个符合给定模式的频道</p>
+<h3 id="PUBSUB-subcommand-argument-argument…"><a href="#PUBSUB-subcommand-argument-argument…" class="headerlink" title="PUBSUB subcommand [argument [argument…]]"></a>PUBSUB subcommand [argument [argument…]]</h3><p>PUBSUB 查看订阅与发布系统状态</p>
+<h3 id="PUBLISH-channel-message"><a href="#PUBLISH-channel-message" class="headerlink" title="PUBLISH channel message"></a>PUBLISH channel message</h3><p>PUBLISH 将信息发送到指定的频道</p>
+<h3 id="PUNSUBSCRIBE-pattern-pattern…"><a href="#PUNSUBSCRIBE-pattern-pattern…" class="headerlink" title="PUNSUBSCRIBE [pattern [pattern…]]"></a>PUNSUBSCRIBE [pattern [pattern…]]</h3><p> PUNSUBSCRIBE 退订所有给定模式的频道</p>
+<h3 id="SUBSCRIBE-channel-channel…"><a href="#SUBSCRIBE-channel-channel…" class="headerlink" title="SUBSCRIBE channel [channel…]"></a>SUBSCRIBE channel [channel…]</h3><p>SUBSCRIBE 订阅给定的一个或多个频道的信息</p>
+<h3 id="UNSUBSCRIBE-channel-channel…"><a href="#UNSUBSCRIBE-channel-channel…" class="headerlink" title="UNSUBSCRIBE [channel [channel…]]"></a>UNSUBSCRIBE [channel [channel…]]</h3><p>UNSUBSCRIBE 退订指定的频道</p>
+<h2 id="redis-Transaction"><a href="#redis-Transaction" class="headerlink" title="redis Transaction"></a>redis Transaction</h2><h3 id="DISCARD"><a href="#DISCARD" class="headerlink" title="DISCARD"></a>DISCARD</h3><p>DISCARD 取消事务，放弃执行事务块内所有命令</p>
+<h3 id="EXEC"><a href="#EXEC" class="headerlink" title="EXEC"></a>EXEC</h3><p>EXEC 执行所有事务块内的命令</p>
+<h3 id="MULTI"><a href="#MULTI" class="headerlink" title="MULTI"></a>MULTI</h3><p>MULTI 标记一个事务块的开始</p>
+<h3 id="UNWATCH"><a href="#UNWATCH" class="headerlink" title="UNWATCH"></a>UNWATCH</h3><p>UNWATCH 取消WATCH命令对所有key的监视</p>
+<h3 id="WATCH-key-key…"><a href="#WATCH-key-key…" class="headerlink" title="WATCH key [key…]"></a>WATCH key [key…]</h3><p>监视一个或多个key，如果在事务执行之前这个key被其他命令所改动，那么事务将被打断</p>
+<h2 id="redis-script"><a href="#redis-script" class="headerlink" title="redis script"></a>redis script</h2><h3 id="EVAL-script-numkeys-key-key-…-arg-arg-…"><a href="#EVAL-script-numkeys-key-key-…-arg-arg-…" class="headerlink" title="EVAL script numkeys key [key …] arg [arg …]"></a>EVAL script numkeys key [key …] arg [arg …]</h3><p>EVAL 执行 Lua 脚本。</p>
+<h3 id="EVALSHA-sha1-numkeys-key-key-…-arg-arg-…"><a href="#EVALSHA-sha1-numkeys-key-key-…-arg-arg-…" class="headerlink" title="EVALSHA sha1 numkeys key [key …] arg [arg …]"></a>EVALSHA sha1 numkeys key [key …] arg [arg …]</h3><p>EVALSHA 执行 Lua 脚本。</p>
+<h3 id="SCRIPT-EXISTS-script-script-…"><a href="#SCRIPT-EXISTS-script-script-…" class="headerlink" title="SCRIPT EXISTS script [script …]"></a>SCRIPT EXISTS script [script …]</h3><p>SCRIPT EXISTS 查看指定的脚本是否已经被保存在缓存当中。</p>
+<h3 id="SCRIPT-FLUSH"><a href="#SCRIPT-FLUSH" class="headerlink" title="SCRIPT FLUSH"></a>SCRIPT FLUSH</h3><p>SCRIPT FLUSH从脚本缓存中移除所有脚本。</p>
+<h3 id="SCRIPT-KILL"><a href="#SCRIPT-KILL" class="headerlink" title="SCRIPT KILL"></a>SCRIPT KILL</h3><p>SCRIPT KILL 杀死当前正在运行的 Lua 脚本。</p>
+<h3 id="SCRIPT-LOAD-script"><a href="#SCRIPT-LOAD-script" class="headerlink" title="SCRIPT LOAD script"></a>SCRIPT LOAD script</h3><p>SCRIPT LOAD 将脚本 script 添加到脚本缓存中，但并不立即执行这个脚本。</p>
+<h2 id="redis-connection"><a href="#redis-connection" class="headerlink" title="redis connection"></a>redis connection</h2><h3 id="AUTH-password"><a href="#AUTH-password" class="headerlink" title="AUTH password"></a>AUTH password</h3><p>AUTH 验证用户</p>
+<h3 id="ECHO-message"><a href="#ECHO-message" class="headerlink" title="ECHO message"></a>ECHO message</h3><p>ECHO 打印字符串</p>
+<h3 id="PING"><a href="#PING" class="headerlink" title="PING"></a>PING</h3><p>PING 查看服务是否运行</p>
+<h3 id="QUIT"><a href="#QUIT" class="headerlink" title="QUIT"></a>QUIT</h3><p>QUIT 关闭当前连接</p>
+<h3 id="SELECT-index"><a href="#SELECT-index" class="headerlink" title="SELECT index"></a>SELECT index</h3><p>SELECT 切换到指定的数据库</p>
+<h2 id="redis-server-command"><a href="#redis-server-command" class="headerlink" title="redis server command"></a>redis server command</h2><h3 id="BGREWRITEAOF"><a href="#BGREWRITEAOF" class="headerlink" title="BGREWRITEAOF"></a>BGREWRITEAOF</h3><p>BGREWRITEAOF 异步执行一个 AOF（AppendOnly File） 文件重写操作</p>
+<h3 id="BGSAVE"><a href="#BGSAVE" class="headerlink" title="BGSAVE"></a>BGSAVE</h3><p>BGSAVE 在后台异步保存当前数据库的数据到磁盘</p>
+<h3 id="CLIENT-KILL-ip-port-ID-client-id"><a href="#CLIENT-KILL-ip-port-ID-client-id" class="headerlink" title="CLIENT KILL [ip:port] [ID client-id]"></a>CLIENT KILL [ip:port] [ID client-id]</h3><p>CLIENT KILL 关闭客户端连接</p>
+<h3 id="CLIENT-LIST"><a href="#CLIENT-LIST" class="headerlink" title="CLIENT LIST"></a>CLIENT LIST</h3><p>CLIENT LIST 获取连接到服务器的客户端连接列表</p>
+<h3 id="CLIENT-GETNAME"><a href="#CLIENT-GETNAME" class="headerlink" title="CLIENT GETNAME"></a>CLIENT GETNAME</h3><p>CLIENT GETNAME 获取连接的名称</p>
+<h3 id="CLIENT-PAUSE-timeout"><a href="#CLIENT-PAUSE-timeout" class="headerlink" title="CLIENT PAUSE timeout"></a>CLIENT PAUSE timeout</h3><p>CLIENT PAUSE 在指定时间内终止运行来自客户端的命令</p>
+<h3 id="CLIENT-SETNAME-connection-name"><a href="#CLIENT-SETNAME-connection-name" class="headerlink" title="CLIENT SETNAME connection-name"></a>CLIENT SETNAME connection-name</h3><p>CLIENT SETNAME 设置当前连接的名称</p>
+<h3 id="CLUSTER-SLOTS"><a href="#CLUSTER-SLOTS" class="headerlink" title="CLUSTER SLOTS"></a>CLUSTER SLOTS</h3><p>CLUSTER SLOTS 获取集群节点的映射数组</p>
+<h3 id="COMMAND"><a href="#COMMAND" class="headerlink" title="COMMAND"></a>COMMAND</h3><p>COMMAND 获取 Redis 命令详情数组</p>
+<h3 id="COMMAND-COUNT"><a href="#COMMAND-COUNT" class="headerlink" title="COMMAND COUNT"></a>COMMAND COUNT</h3><p>COMMAND COUNT 获取 Redis 命令总数</p>
+<h3 id="COMMAND-GETKEYS"><a href="#COMMAND-GETKEYS" class="headerlink" title="COMMAND GETKEYS"></a>COMMAND GETKEYS</h3><p>COMMAND GETKEYS 获取给定命令的所有键</p>
+<h3 id="TIME"><a href="#TIME" class="headerlink" title="TIME"></a>TIME</h3><p>TIME 返回当前服务器时间</p>
+<h3 id="COMMAND-INFO-command-name-command-name-…"><a href="#COMMAND-INFO-command-name-command-name-…" class="headerlink" title="COMMAND INFO command-name [command-name …]"></a>COMMAND INFO command-name [command-name …]</h3><p>COMMAND INFO 获取指定 Redis 命令描述的数组</p>
+<h3 id="CONFIG-GET-parameter"><a href="#CONFIG-GET-parameter" class="headerlink" title="CONFIG GET parameter"></a>CONFIG GET parameter</h3><p>CONFIG GET 获取指定配置参数的值</p>
+<h3 id="CONFIG-REWRITE"><a href="#CONFIG-REWRITE" class="headerlink" title="CONFIG REWRITE"></a>CONFIG REWRITE</h3><p>CONFIG REWRITE 对启动 Redis 服务器时所指定的 redis.conf 配置文件进行改写</p>
+<h3 id="CONFIG-SET-parameter-value"><a href="#CONFIG-SET-parameter-value" class="headerlink" title="CONFIG SET parameter value"></a>CONFIG SET parameter value</h3><p>CONFIG SET 修改 redis 配置参数，无需重启</p>
+<h3 id="CONFIG-RESETSTAT"><a href="#CONFIG-RESETSTAT" class="headerlink" title="CONFIG RESETSTAT"></a>CONFIG RESETSTAT</h3><p> CONFIG RESETSTAT 重置 INFO 命令中的某些统计数据</p>
+<h3 id="DBSIZE"><a href="#DBSIZE" class="headerlink" title="DBSIZE"></a>DBSIZE</h3><p>DBSIZE 返回当前数据库的 key 的数量</p>
+<h3 id="DEBUG-OBJECT-key"><a href="#DEBUG-OBJECT-key" class="headerlink" title="DEBUG OBJECT key"></a>DEBUG OBJECT key</h3><p>DEBUG OBJECT 获取 key 的调试信息</p>
+<h3 id="DEBUG-SEGFAULT"><a href="#DEBUG-SEGFAULT" class="headerlink" title="DEBUG SEGFAULT"></a>DEBUG SEGFAULT</h3><p>DEBUG SEGFAULT 让 Redis 服务崩溃</p>
+<h3 id="FLUSHALL"><a href="#FLUSHALL" class="headerlink" title="FLUSHALL"></a>FLUSHALL</h3><p>FLUSHALL 删除所有数据库的所有key</p>
+<h3 id="FLUSHDB"><a href="#FLUSHDB" class="headerlink" title="FLUSHDB"></a>FLUSHDB</h3><p>FLUSHDB 删除当前数据库的所有key</p>
+<h3 id="INFO-section"><a href="#INFO-section" class="headerlink" title="INFO [section]"></a>INFO [section]</h3><p>INFO 获取 Redis 服务器的各种信息和统计数值</p>
+<h3 id="LASTSAVE"><a href="#LASTSAVE" class="headerlink" title="LASTSAVE"></a>LASTSAVE</h3><p>LASTSAVE 返回最近一次 Redis 成功将数据保存到磁盘上的时间，以 UNIX 时间戳格式表示</p>
+<h3 id="MONITOR"><a href="#MONITOR" class="headerlink" title="MONITOR"></a>MONITOR</h3><p>MONITOR 实时打印出 Redis 服务器接收到的命令，调试用</p>
+<h3 id="ROLE"><a href="#ROLE" class="headerlink" title="ROLE"></a>ROLE</h3><p>ROLE 返回主从实例所属的角色</p>
+<h3 id="SAVE"><a href="#SAVE" class="headerlink" title="SAVE"></a>SAVE</h3><p>SAVE 同步保存数据到硬盘</p>
+<h3 id="SHUTDOWN-NOSAVE-SAVE"><a href="#SHUTDOWN-NOSAVE-SAVE" class="headerlink" title="SHUTDOWN [NOSAVE] [SAVE]"></a>SHUTDOWN [NOSAVE] [SAVE]</h3><p>SHUTDOWN 异步保存数据到硬盘，并关闭服务器</p>
+<h3 id="SLAVEOF-host-port"><a href="#SLAVEOF-host-port" class="headerlink" title="SLAVEOF host port"></a>SLAVEOF host port</h3><p>SLAVEOF 将当前服务器转变为指定服务器的从属服务器(slave server)</p>
+<h3 id="SLOWLOG-subcommand-argument"><a href="#SLOWLOG-subcommand-argument" class="headerlink" title="SLOWLOG subcommand [argument]"></a>SLOWLOG subcommand [argument]</h3><p>SLOWLOG 管理 redis 的慢日志</p>
+<h3 id="SYNC"><a href="#SYNC" class="headerlink" title="SYNC"></a>SYNC</h3><p>SYNC 用于复制功能(replication)的内部命令</p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="../tags/base/" rel="tag"># base</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="../golang条件编译/" rel="next" title="golang条件编译">
+                <i class="fa fa-chevron-left"></i> golang条件编译
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="../redis主从复制/" rel="prev" title="redis主从复制">
+                redis主从复制 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">dhainidewo</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="../archives/">
+              
+                  <span class="site-state-item-count">30</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="../categories/index.html">
+                  <span class="site-state-item-count">6</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="../tags/index.html">
+                  <span class="site-state-item-count">13</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://github.com/daihainidewo" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-globe"></i>GitHub</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+            <div class="links-of-blogroll motion-element links-of-blogroll-block">
+              <div class="links-of-blogroll-title">
+                <i class="fa  fa-fw fa-link"></i>
+                Links
+              </div>
+              <ul class="links-of-blogroll-list">
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="http://www.xingximing.cn/" title="xxm" target="_blank">xxm</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://www.fuweihu.xyz/" title="fwh" target="_blank">fwh</a>
+                  </li>
+                
+              </ul>
+            </div>
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#redis-简介"><span class="nav-number">1.</span> <span class="nav-text">redis 简介</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#介绍"><span class="nav-number">1.1.</span> <span class="nav-text">介绍</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#优势"><span class="nav-number">1.2.</span> <span class="nav-text">优势</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#redis-命令"><span class="nav-number">2.</span> <span class="nav-text">redis 命令</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#redis-key"><span class="nav-number">2.1.</span> <span class="nav-text">redis key</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#DEL-key"><span class="nav-number">2.1.1.</span> <span class="nav-text">DEL key</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#DUMP-key"><span class="nav-number">2.1.2.</span> <span class="nav-text">DUMP key</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#EXISTS-key"><span class="nav-number">2.1.3.</span> <span class="nav-text">EXISTS key</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#EXPIRE-key-seconds"><span class="nav-number">2.1.4.</span> <span class="nav-text">EXPIRE key seconds</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#EXPIREAT-key-timestamp"><span class="nav-number">2.1.5.</span> <span class="nav-text">EXPIREAT key timestamp</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#PEXPIRE-key-milliseconds"><span class="nav-number">2.1.6.</span> <span class="nav-text">PEXPIRE key milliseconds</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#PEXPIREAT-key-milliseconds-timestamp"><span class="nav-number">2.1.7.</span> <span class="nav-text">PEXPIREAT key milliseconds-timestamp</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#KEYS-pattern"><span class="nav-number">2.1.8.</span> <span class="nav-text">KEYS pattern</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#MOVE-key-db"><span class="nav-number">2.1.9.</span> <span class="nav-text">MOVE key db</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#PERSIST-key"><span class="nav-number">2.1.10.</span> <span class="nav-text">PERSIST key</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#PTTL-key"><span class="nav-number">2.1.11.</span> <span class="nav-text">PTTL key</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#TTL-key"><span class="nav-number">2.1.12.</span> <span class="nav-text">TTL key</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#RANDOMKEY"><span class="nav-number">2.1.13.</span> <span class="nav-text">RANDOMKEY</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#RENAME-key"><span class="nav-number">2.1.14.</span> <span class="nav-text">RENAME key</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#RENAMENX-key-newkey"><span class="nav-number">2.1.15.</span> <span class="nav-text">RENAMENX key newkey</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#TYPE-key"><span class="nav-number">2.1.16.</span> <span class="nav-text">TYPE key</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#redis-string"><span class="nav-number">2.2.</span> <span class="nav-text">redis string</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#SET-key-value"><span class="nav-number">2.2.1.</span> <span class="nav-text">SET key value</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#GET-key"><span class="nav-number">2.2.2.</span> <span class="nav-text">GET key</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#GETRANGE-key-start-end"><span class="nav-number">2.2.3.</span> <span class="nav-text">GETRANGE key start end</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#GETSET-key-value"><span class="nav-number">2.2.4.</span> <span class="nav-text">GETSET key value</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#GETBIT-key-offset"><span class="nav-number">2.2.5.</span> <span class="nav-text">GETBIT key offset</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#MGET-key1-key2…"><span class="nav-number">2.2.6.</span> <span class="nav-text">MGET key1 [key2…]</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#SETBIT-key-offset-value"><span class="nav-number">2.2.7.</span> <span class="nav-text">SETBIT key offset value</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#SETEX-key-seconds-value"><span class="nav-number">2.2.8.</span> <span class="nav-text">SETEX key seconds value</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#SETNX-key-value"><span class="nav-number">2.2.9.</span> <span class="nav-text">SETNX key value</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#SETRANGE-key-offset-value"><span class="nav-number">2.2.10.</span> <span class="nav-text">SETRANGE key offset value</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#STRLEN-key"><span class="nav-number">2.2.11.</span> <span class="nav-text">STRLEN key</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#MSET-key-value-key-value…"><span class="nav-number">2.2.12.</span> <span class="nav-text">MSET key value [key value…]</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#MSETNX-key-value-key-value…"><span class="nav-number">2.2.13.</span> <span class="nav-text">MSETNX key value [key value…]</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#PSETEX-key-milliseconds-value"><span class="nav-number">2.2.14.</span> <span class="nav-text">PSETEX key milliseconds value</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#INCR-key"><span class="nav-number">2.2.15.</span> <span class="nav-text">INCR key</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#INCRBY-key-increment"><span class="nav-number">2.2.16.</span> <span class="nav-text">INCRBY key increment</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#INCRBYFLOAT-key-increment"><span class="nav-number">2.2.17.</span> <span class="nav-text">INCRBYFLOAT key increment</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#DECR-key"><span class="nav-number">2.2.18.</span> <span class="nav-text">DECR key</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#DECRBY-key-decrement"><span class="nav-number">2.2.19.</span> <span class="nav-text">DECRBY key decrement</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#APPEND-key-value"><span class="nav-number">2.2.20.</span> <span class="nav-text">APPEND key value</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#redis-hash"><span class="nav-number">2.3.</span> <span class="nav-text">redis hash</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#HDEL-key-field1-field2…"><span class="nav-number">2.3.1.</span> <span class="nav-text">HDEL key field1 [field2…]</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#HEXISTS-key-field"><span class="nav-number">2.3.2.</span> <span class="nav-text">HEXISTS key field</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#HGET-key-field"><span class="nav-number">2.3.3.</span> <span class="nav-text">HGET key field</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#HGETALL-key"><span class="nav-number">2.3.4.</span> <span class="nav-text">HGETALL key</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#HINCRBY-key-field-increment"><span class="nav-number">2.3.5.</span> <span class="nav-text">HINCRBY key field increment</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#HINCRBYFLOAT-key-field-increment"><span class="nav-number">2.3.6.</span> <span class="nav-text">HINCRBYFLOAT key field increment</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#HKEYS-key"><span class="nav-number">2.3.7.</span> <span class="nav-text">HKEYS key</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#HLEN-key"><span class="nav-number">2.3.8.</span> <span class="nav-text">HLEN key</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#HMGET-key-field1-field2…"><span class="nav-number">2.3.9.</span> <span class="nav-text">HMGET key field1 [field2…]</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#HMSET-key-field1-value1-field2-value2…"><span class="nav-number">2.3.10.</span> <span class="nav-text">HMSET key field1 value1 [field2 value2…]</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#HSET-key-field-value"><span class="nav-number">2.3.11.</span> <span class="nav-text">HSET key field value</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#HSETNX-key-field-value"><span class="nav-number">2.3.12.</span> <span class="nav-text">HSETNX key field value</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#HVALS-key"><span class="nav-number">2.3.13.</span> <span class="nav-text">HVALS key</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#HSCAN-key-cursor-MATCH-pattern-COUNT-count"><span class="nav-number">2.3.14.</span> <span class="nav-text">HSCAN key cursor [MATCH pattern] [COUNT count]</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#redis-list"><span class="nav-number">2.4.</span> <span class="nav-text">redis list</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#BLPOP-key1-key2-timeout"><span class="nav-number">2.4.1.</span> <span class="nav-text">BLPOP key1 [key2] timeout</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#BRPOP-key1-key2-timeout"><span class="nav-number">2.4.2.</span> <span class="nav-text">BRPOP key1 [key2] timeout</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#BRPOPLPUSH-source-destination-timeout"><span class="nav-number">2.4.3.</span> <span class="nav-text">BRPOPLPUSH source destination timeout</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#LINDEX-key-index"><span class="nav-number">2.4.4.</span> <span class="nav-text">LINDEX key index</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#LINSERT-key-BEFORE-AFTER-pivot-value"><span class="nav-number">2.4.5.</span> <span class="nav-text">LINSERT key BEFORE|AFTER pivot value</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#LLEN-key"><span class="nav-number">2.4.6.</span> <span class="nav-text">LLEN key</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#LPOP-key"><span class="nav-number">2.4.7.</span> <span class="nav-text">LPOP key</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#LPUSH-key-value1-value2…"><span class="nav-number">2.4.8.</span> <span class="nav-text">LPUSH key value1 [value2…]</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#LPUSHX-key-value"><span class="nav-number">2.4.9.</span> <span class="nav-text">LPUSHX key value</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#LRANGE-key-start-stop"><span class="nav-number">2.4.10.</span> <span class="nav-text">LRANGE key start stop</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#LREM-key-count-value"><span class="nav-number">2.4.11.</span> <span class="nav-text">LREM key count value</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#LSET-key-index-value"><span class="nav-number">2.4.12.</span> <span class="nav-text">LSET key index value</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#LTRIM-key-start-stop"><span class="nav-number">2.4.13.</span> <span class="nav-text">LTRIM key start stop</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#RPOP-key"><span class="nav-number">2.4.14.</span> <span class="nav-text">RPOP key</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#RPOPLPUSH-source-destination"><span class="nav-number">2.4.15.</span> <span class="nav-text">RPOPLPUSH source destination</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#RPUSH-key-value1-value2…"><span class="nav-number">2.4.16.</span> <span class="nav-text">RPUSH key value1 [value2…]</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#RPUSHX-key-value"><span class="nav-number">2.4.17.</span> <span class="nav-text">RPUSHX key value</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#redis-set"><span class="nav-number">2.5.</span> <span class="nav-text">redis set</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#SADD-key-member1-member2…"><span class="nav-number">2.5.1.</span> <span class="nav-text">SADD key member1 [member2…]</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#SCARD-key"><span class="nav-number">2.5.2.</span> <span class="nav-text">SCARD key</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#SDIFF-key1-key2…"><span class="nav-number">2.5.3.</span> <span class="nav-text">SDIFF key1 [key2…]</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#SDIFFSTORE-destination-key1-key2…"><span class="nav-number">2.5.4.</span> <span class="nav-text">SDIFFSTORE destination key1 [key2…]</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#SINTER-key1-key2…"><span class="nav-number">2.5.5.</span> <span class="nav-text">SINTER key1 [key2…]</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#SINTERSTORE-destination-key1-key2…"><span class="nav-number">2.5.6.</span> <span class="nav-text">SINTERSTORE destination key1 [key2…]</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#SISMEMBER-key-member"><span class="nav-number">2.5.7.</span> <span class="nav-text">SISMEMBER key member</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#SMEMBERS-key"><span class="nav-number">2.5.8.</span> <span class="nav-text">SMEMBERS key</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#SMOVE-source-destination-member"><span class="nav-number">2.5.9.</span> <span class="nav-text">SMOVE source destination member</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#SPOP-key"><span class="nav-number">2.5.10.</span> <span class="nav-text">SPOP key</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#SRANDMEMBER-key-count"><span class="nav-number">2.5.11.</span> <span class="nav-text">SRANDMEMBER key [count]</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#SREM-key-member1-member2"><span class="nav-number">2.5.12.</span> <span class="nav-text">SREM key member1 [member2]</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#SUNION-key1-key2…"><span class="nav-number">2.5.13.</span> <span class="nav-text">SUNION key1 [key2…]</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#SUNIONSTORE-destination-key1-key2…"><span class="nav-number">2.5.14.</span> <span class="nav-text">SUNIONSTORE destination key1 [key2…]</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#SSCAN-key-cursor-MATCH-pattern-COUNT-count"><span class="nav-number">2.5.15.</span> <span class="nav-text">SSCAN key cursor [MATCH pattern] [COUNT count]</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#redis-sorted-set"><span class="nav-number">2.6.</span> <span class="nav-text">redis sorted set</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#ZADD-key-score1-member1-score2-member2…"><span class="nav-number">2.6.1.</span> <span class="nav-text">ZADD key score1 member1 [score2 member2…]</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#ZCARD-key"><span class="nav-number">2.6.2.</span> <span class="nav-text">ZCARD key</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#ZCOUNT-key-min-max"><span class="nav-number">2.6.3.</span> <span class="nav-text">ZCOUNT key min max</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#ZINCRBY-key-increment-member"><span class="nav-number">2.6.4.</span> <span class="nav-text">ZINCRBY key increment member</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#ZINTERSTORE-destination-numkeys-key-key-…"><span class="nav-number">2.6.5.</span> <span class="nav-text">ZINTERSTORE destination numkeys key [key …]</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#ZLEXCOUNT-key-min-max"><span class="nav-number">2.6.6.</span> <span class="nav-text">ZLEXCOUNT key min max</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#ZRANGE-key-start-stop-WITHSCORES"><span class="nav-number">2.6.7.</span> <span class="nav-text">ZRANGE key start stop [WITHSCORES]</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#ZRANGEBYLEX-key-min-max-LIMIT-offset-count"><span class="nav-number">2.6.8.</span> <span class="nav-text">ZRANGEBYLEX key min max [LIMIT offset count]</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#ZRANGEBYSCORE-key-min-max-WITHSCORES-LIMIT"><span class="nav-number">2.6.9.</span> <span class="nav-text">ZRANGEBYSCORE key min max [WITHSCORES] [LIMIT]</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#ZRANK-key-member"><span class="nav-number">2.6.10.</span> <span class="nav-text">ZRANK key member</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#ZREM-key-member-member…"><span class="nav-number">2.6.11.</span> <span class="nav-text">ZREM key member [member…]</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#ZREMRANGEBYLEX-key-min-max"><span class="nav-number">2.6.12.</span> <span class="nav-text">ZREMRANGEBYLEX key min max</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#ZREMRANGEBYRANK-key-start-stop"><span class="nav-number">2.6.13.</span> <span class="nav-text">ZREMRANGEBYRANK key start stop</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#ZREMRANGEBYSCORE-key-min-max"><span class="nav-number">2.6.14.</span> <span class="nav-text">ZREMRANGEBYSCORE key min max</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#ZREVRANGE-key-start-stop-WITHSCORES"><span class="nav-number">2.6.15.</span> <span class="nav-text">ZREVRANGE key start stop [WITHSCORES]</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#ZREVRANGEBYSCORE-key-max-min-WITHSCORES"><span class="nav-number">2.6.16.</span> <span class="nav-text">ZREVRANGEBYSCORE key max min [WITHSCORES]</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#ZREVRANK-key-member"><span class="nav-number">2.6.17.</span> <span class="nav-text">ZREVRANK key member</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#ZSCORE-key-member"><span class="nav-number">2.6.18.</span> <span class="nav-text">ZSCORE key member</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#ZUNIONSTORE-destination-numkeys-key-key…"><span class="nav-number">2.6.19.</span> <span class="nav-text">ZUNIONSTORE destination numkeys key [key…]</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#ZSCAN-key-cursor-MATCH-pattern-COUNT-count"><span class="nav-number">2.6.20.</span> <span class="nav-text">ZSCAN key cursor [MATCH pattern] [COUNT count]</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#redis-HyperLogLog"><span class="nav-number">2.7.</span> <span class="nav-text">redis HyperLogLog</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#PFADD-key-element-element…"><span class="nav-number">2.7.1.</span> <span class="nav-text">PFADD key element [element…]</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#FPCOUNT-key-key…"><span class="nav-number">2.7.2.</span> <span class="nav-text">FPCOUNT key [key…]</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#PFMERGE-destkey-sourcekey-sourcekey…"><span class="nav-number">2.7.3.</span> <span class="nav-text">PFMERGE destkey sourcekey [sourcekey…]</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#redis-SUB-PUB"><span class="nav-number">2.8.</span> <span class="nav-text">redis SUB/PUB</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#PSUBSCRIBE-pattern-pattern…"><span class="nav-number">2.8.1.</span> <span class="nav-text">PSUBSCRIBE pattern [pattern…]</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#PUBSUB-subcommand-argument-argument…"><span class="nav-number">2.8.2.</span> <span class="nav-text">PUBSUB subcommand [argument [argument…]]</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#PUBLISH-channel-message"><span class="nav-number">2.8.3.</span> <span class="nav-text">PUBLISH channel message</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#PUNSUBSCRIBE-pattern-pattern…"><span class="nav-number">2.8.4.</span> <span class="nav-text">PUNSUBSCRIBE [pattern [pattern…]]</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#SUBSCRIBE-channel-channel…"><span class="nav-number">2.8.5.</span> <span class="nav-text">SUBSCRIBE channel [channel…]</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#UNSUBSCRIBE-channel-channel…"><span class="nav-number">2.8.6.</span> <span class="nav-text">UNSUBSCRIBE [channel [channel…]]</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#redis-Transaction"><span class="nav-number">2.9.</span> <span class="nav-text">redis Transaction</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#DISCARD"><span class="nav-number">2.9.1.</span> <span class="nav-text">DISCARD</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#EXEC"><span class="nav-number">2.9.2.</span> <span class="nav-text">EXEC</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#MULTI"><span class="nav-number">2.9.3.</span> <span class="nav-text">MULTI</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#UNWATCH"><span class="nav-number">2.9.4.</span> <span class="nav-text">UNWATCH</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#WATCH-key-key…"><span class="nav-number">2.9.5.</span> <span class="nav-text">WATCH key [key…]</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#redis-script"><span class="nav-number">2.10.</span> <span class="nav-text">redis script</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#EVAL-script-numkeys-key-key-…-arg-arg-…"><span class="nav-number">2.10.1.</span> <span class="nav-text">EVAL script numkeys key [key …] arg [arg …]</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#EVALSHA-sha1-numkeys-key-key-…-arg-arg-…"><span class="nav-number">2.10.2.</span> <span class="nav-text">EVALSHA sha1 numkeys key [key …] arg [arg …]</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#SCRIPT-EXISTS-script-script-…"><span class="nav-number">2.10.3.</span> <span class="nav-text">SCRIPT EXISTS script [script …]</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#SCRIPT-FLUSH"><span class="nav-number">2.10.4.</span> <span class="nav-text">SCRIPT FLUSH</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#SCRIPT-KILL"><span class="nav-number">2.10.5.</span> <span class="nav-text">SCRIPT KILL</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#SCRIPT-LOAD-script"><span class="nav-number">2.10.6.</span> <span class="nav-text">SCRIPT LOAD script</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#redis-connection"><span class="nav-number">2.11.</span> <span class="nav-text">redis connection</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#AUTH-password"><span class="nav-number">2.11.1.</span> <span class="nav-text">AUTH password</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#ECHO-message"><span class="nav-number">2.11.2.</span> <span class="nav-text">ECHO message</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#PING"><span class="nav-number">2.11.3.</span> <span class="nav-text">PING</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#QUIT"><span class="nav-number">2.11.4.</span> <span class="nav-text">QUIT</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#SELECT-index"><span class="nav-number">2.11.5.</span> <span class="nav-text">SELECT index</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#redis-server-command"><span class="nav-number">2.12.</span> <span class="nav-text">redis server command</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#BGREWRITEAOF"><span class="nav-number">2.12.1.</span> <span class="nav-text">BGREWRITEAOF</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#BGSAVE"><span class="nav-number">2.12.2.</span> <span class="nav-text">BGSAVE</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#CLIENT-KILL-ip-port-ID-client-id"><span class="nav-number">2.12.3.</span> <span class="nav-text">CLIENT KILL [ip:port] [ID client-id]</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#CLIENT-LIST"><span class="nav-number">2.12.4.</span> <span class="nav-text">CLIENT LIST</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#CLIENT-GETNAME"><span class="nav-number">2.12.5.</span> <span class="nav-text">CLIENT GETNAME</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#CLIENT-PAUSE-timeout"><span class="nav-number">2.12.6.</span> <span class="nav-text">CLIENT PAUSE timeout</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#CLIENT-SETNAME-connection-name"><span class="nav-number">2.12.7.</span> <span class="nav-text">CLIENT SETNAME connection-name</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#CLUSTER-SLOTS"><span class="nav-number">2.12.8.</span> <span class="nav-text">CLUSTER SLOTS</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#COMMAND"><span class="nav-number">2.12.9.</span> <span class="nav-text">COMMAND</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#COMMAND-COUNT"><span class="nav-number">2.12.10.</span> <span class="nav-text">COMMAND COUNT</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#COMMAND-GETKEYS"><span class="nav-number">2.12.11.</span> <span class="nav-text">COMMAND GETKEYS</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#TIME"><span class="nav-number">2.12.12.</span> <span class="nav-text">TIME</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#COMMAND-INFO-command-name-command-name-…"><span class="nav-number">2.12.13.</span> <span class="nav-text">COMMAND INFO command-name [command-name …]</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#CONFIG-GET-parameter"><span class="nav-number">2.12.14.</span> <span class="nav-text">CONFIG GET parameter</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#CONFIG-REWRITE"><span class="nav-number">2.12.15.</span> <span class="nav-text">CONFIG REWRITE</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#CONFIG-SET-parameter-value"><span class="nav-number">2.12.16.</span> <span class="nav-text">CONFIG SET parameter value</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#CONFIG-RESETSTAT"><span class="nav-number">2.12.17.</span> <span class="nav-text">CONFIG RESETSTAT</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#DBSIZE"><span class="nav-number">2.12.18.</span> <span class="nav-text">DBSIZE</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#DEBUG-OBJECT-key"><span class="nav-number">2.12.19.</span> <span class="nav-text">DEBUG OBJECT key</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#DEBUG-SEGFAULT"><span class="nav-number">2.12.20.</span> <span class="nav-text">DEBUG SEGFAULT</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#FLUSHALL"><span class="nav-number">2.12.21.</span> <span class="nav-text">FLUSHALL</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#FLUSHDB"><span class="nav-number">2.12.22.</span> <span class="nav-text">FLUSHDB</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#INFO-section"><span class="nav-number">2.12.23.</span> <span class="nav-text">INFO [section]</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#LASTSAVE"><span class="nav-number">2.12.24.</span> <span class="nav-text">LASTSAVE</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#MONITOR"><span class="nav-number">2.12.25.</span> <span class="nav-text">MONITOR</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#ROLE"><span class="nav-number">2.12.26.</span> <span class="nav-text">ROLE</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#SAVE"><span class="nav-number">2.12.27.</span> <span class="nav-text">SAVE</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#SHUTDOWN-NOSAVE-SAVE"><span class="nav-number">2.12.28.</span> <span class="nav-text">SHUTDOWN [NOSAVE] [SAVE]</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#SLAVEOF-host-port"><span class="nav-number">2.12.29.</span> <span class="nav-text">SLAVEOF host port</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#SLOWLOG-subcommand-argument"><span class="nav-number">2.12.30.</span> <span class="nav-text">SLOWLOG subcommand [argument]</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#SYNC"><span class="nav-number">2.12.31.</span> <span class="nav-text">SYNC</span></a></li></ol></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">dhainidewo</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Muse</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="../lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="../lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="../lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="../lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="../lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="../lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="../js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="../js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="../js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="../js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="../js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

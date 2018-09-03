@@ -87,7 +87,7 @@
 <meta property="og:site_name" content="dhainidewo blog">
 <meta property="og:description" content="本文介绍yaml基础教程">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2018-08-09T10:10:43.207Z">
+<meta property="og:updated_time" content="2018-08-20T02:09:50.626Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="yaml教程">
 <meta name="twitter:description" content="本文介绍yaml基础教程">
@@ -329,7 +329,7 @@
 <li>使用缩进表示层级关系</li>
 <li>缩进不允许使用tab，只允许空格</li>
 <li>缩进的空格数不重要，只要相同层级的元素左对齐即可</li>
-<li><h1 id="表示注释"><a href="#表示注释" class="headerlink" title="表示注释"></a>表示注释</h1></li>
+<li>‘#’表示注释</li>
 </ul>
 <p>yaml支持的数据类型：</p>
 <ul>
@@ -350,9 +350,9 @@
 <li>浮点数</li>
 <li>Null</li>
 <li>时间</li>
-<li>日期<h2 id="引用"><a href="#引用" class="headerlink" title="引用"></a>引用</h2>&amp;锚点和*别名，可以用来引用<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">defaults:</span> <span class="meta">&amp;defaults</span></span><br><span class="line"><span class="attr">  adapter:</span>  <span class="string">postgres</span></span><br><span class="line"><span class="attr">  host:</span>     <span class="string">localhost</span></span><br><span class="line"></span><br><span class="line"><span class="attr">development:</span></span><br><span class="line"><span class="attr">  database:</span> <span class="string">myapp_development</span></span><br><span class="line">  <span class="string">&lt;&lt;:</span> <span class="meta">*defaults</span></span><br><span class="line"></span><br><span class="line"><span class="attr">test:</span></span><br><span class="line"><span class="attr">  database:</span> <span class="string">myapp_test</span></span><br><span class="line">  <span class="string">&lt;&lt;:</span> <span class="meta">*defaults</span></span><br></pre></td></tr></table></figure>
-</li>
+<li>日期</li>
 </ul>
+<h2 id="引用"><a href="#引用" class="headerlink" title="引用"></a>引用</h2><p>&amp;锚点和*别名，可以用来引用<br><figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">defaults:</span> <span class="meta">&amp;defaults</span></span><br><span class="line"><span class="attr">  adapter:</span>  <span class="string">postgres</span></span><br><span class="line"><span class="attr">  host:</span>     <span class="string">localhost</span></span><br><span class="line"></span><br><span class="line"><span class="attr">development:</span></span><br><span class="line"><span class="attr">  database:</span> <span class="string">myapp_development</span></span><br><span class="line">  <span class="string">&lt;&lt;:</span> <span class="meta">*defaults</span></span><br><span class="line"></span><br><span class="line"><span class="attr">test:</span></span><br><span class="line"><span class="attr">  database:</span> <span class="string">myapp_test</span></span><br><span class="line">  <span class="string">&lt;&lt;:</span> <span class="meta">*defaults</span></span><br></pre></td></tr></table></figure></p>
 <p>相当于<br><figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">defaults:</span></span><br><span class="line"><span class="attr">  adapter:</span>  <span class="string">postgres</span></span><br><span class="line"><span class="attr">  host:</span>     <span class="string">localhost</span></span><br><span class="line"></span><br><span class="line"><span class="attr">development:</span></span><br><span class="line"><span class="attr">  database:</span> <span class="string">myapp_development</span></span><br><span class="line"><span class="attr">  adapter:</span>  <span class="string">postgres</span></span><br><span class="line"><span class="attr">  host:</span>     <span class="string">localhost</span></span><br><span class="line"></span><br><span class="line"><span class="attr">test:</span></span><br><span class="line"><span class="attr">  database:</span> <span class="string">myapp_test</span></span><br><span class="line"><span class="attr">  adapter:</span>  <span class="string">postgres</span></span><br><span class="line"><span class="attr">  host:</span>     <span class="string">localhost</span></span><br></pre></td></tr></table></figure></p>
 
       
@@ -473,7 +473,7 @@
               
                 <a href="../archives/">
               
-                  <span class="site-state-item-count">26</span>
+                  <span class="site-state-item-count">30</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -484,7 +484,7 @@
               
               <div class="site-state-item site-state-categories">
                 <a href="../categories/index.html">
-                  <span class="site-state-item-count">5</span>
+                  <span class="site-state-item-count">6</span>
                   <span class="site-state-item-name">分类</span>
                 </a>
               </div>
@@ -495,7 +495,7 @@
               
               <div class="site-state-item site-state-tags">
                 <a href="../tags/index.html">
-                  <span class="site-state-item-count">10</span>
+                  <span class="site-state-item-count">13</span>
                   <span class="site-state-item-name">标签</span>
                 </a>
               </div>
@@ -522,6 +522,24 @@
 
           
           
+            <div class="links-of-blogroll motion-element links-of-blogroll-block">
+              <div class="links-of-blogroll-title">
+                <i class="fa  fa-fw fa-link"></i>
+                Links
+              </div>
+              <ul class="links-of-blogroll-list">
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="http://www.xingximing.cn/" title="xxm" target="_blank">xxm</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://www.fuweihu.xyz/" title="fwh" target="_blank">fwh</a>
+                  </li>
+                
+              </ul>
+            </div>
+          
 
           
 
@@ -538,7 +556,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#yaml简介"><span class="nav-number">1.</span> <span class="nav-text">yaml简介</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#表示注释"><span class="nav-number">2.</span> <span class="nav-text">表示注释</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#yaml对象"><span class="nav-number">2.1.</span> <span class="nav-text">yaml对象</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#yaml数组"><span class="nav-number">2.2.</span> <span class="nav-text">yaml数组</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#复合结构"><span class="nav-number">2.3.</span> <span class="nav-text">复合结构</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#纯量"><span class="nav-number">2.4.</span> <span class="nav-text">纯量</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#引用"><span class="nav-number">2.5.</span> <span class="nav-text">引用</span></a></li></ol></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#yaml简介"><span class="nav-number">1.</span> <span class="nav-text">yaml简介</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#yaml对象"><span class="nav-number">1.1.</span> <span class="nav-text">yaml对象</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#yaml数组"><span class="nav-number">1.2.</span> <span class="nav-text">yaml数组</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#复合结构"><span class="nav-number">1.3.</span> <span class="nav-text">复合结构</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#纯量"><span class="nav-number">1.4.</span> <span class="nav-text">纯量</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#引用"><span class="nav-number">1.5.</span> <span class="nav-text">引用</span></a></li></ol></li></ol></div>
             
 
           </div>
